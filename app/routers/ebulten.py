@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional
 
-from app.database import get_db
+from app.dependencies import get_db
 from app import models
 
 router = APIRouter()
