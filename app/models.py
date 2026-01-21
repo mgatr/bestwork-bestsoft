@@ -341,6 +341,113 @@ class EBultenGonderim(Base):
 
     hata_mesaji = Column(Text, nullable=True)
 
+# SMS MODÜLÜ (MODÜL 7)
+
+class SMSKampanya(Base):
+    __tablename__ = "sms_kampanyalar"
+    id = Column(Integer, primary_key=True, index=True)
+    ad = Column(String(200), nullable=False)
+    mesaj = Column(Text, nullable=False)
+    hedef = Column(String(50), default="tum_uyeler")  # tum_uyeler, aktif_uyeler, ozel_liste
+    gonderilecek_sayi = Column(Integer, default=0)
+    gonderilen_sayi = Column(Integer, default=0)
+    basarili_sayi = Column(Integer, default=0)
+    durum = Column(String(50), default="taslak")
+    olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+
+class SMSLog(Base):
+    __tablename__ = "sms_log"
+    id = Column(Integer, primary_key=True, index=True)
+    kampanya_id = Column(Integer, ForeignKey("sms_kampanyalar.id"), nullable=True)
+    telefon = Column(String(20), nullable=False)
+    mesaj = Column(Text, nullable=False)
+    durum = Column(String(50), default="beklemede")
+    tarih = Column(DateTime(timezone=True), default=get_turkey_time)
+
+# BANKA VE ÖDEME MODÜLÜ (MODÜL 8)
+
+class Banka(Base):
+    __tablename__ = "bankalar"
+    id = Column(Integer, primary_key=True, index=True)
+    ad = Column(String(100), nullable=False)
+    kod = Column(String(20), nullable=True)
+    aktif = Column(Boolean, default=True)
+
+class BankaHesap(Base):
+    __tablename__ = "banka_hesaplari"
+    id = Column(Integer, primary_key=True, index=True)
+    banka_id = Column(Integer, ForeignKey("bankalar.id"))
+    hesap_adi = Column(String(200), nullable=False)
+    iban = Column(String(34), nullable=False)
+    sube_kodu = Column(String(20), nullable=True)
+    hesap_no = Column(String(30), nullable=True)
+    aktif = Column(Boolean, default=True)
+
+class Doviz(Base):
+    __tablename__ = "dovizler"
+    id = Column(Integer, primary_key=True, index=True)
+    kod = Column(String(3), unique=True)  # TRY, USD, EUR
+    ad = Column(String(50))
+    sembol = Column(String(10))
+    alis = Column(Numeric(PARA_PRECISION, PARA_SCALE), default=Decimal("1.0000"))
+    satis = Column(Numeric(PARA_PRECISION, PARA_SCALE), default=Decimal("1.0000"))
+    guncelleme_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+
+# KATALOG MODÜLÜ (MODÜL 9)
+
+class Katalog(Base):
+    __tablename__ = "kataloglar"
+    id = Column(Integer, primary_key=True, index=True)
+    ad = Column(String(200), nullable=False)
+    aciklama = Column(Text, nullable=True)
+    kapak_resmi = Column(String(500), nullable=True)
+    aktif = Column(Boolean, default=True)
+    olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+
+class KatalogSayfa(Base):
+    __tablename__ = "katalog_sayfalar"
+    id = Column(Integer, primary_key=True, index=True)
+    katalog_id = Column(Integer, ForeignKey("kataloglar.id"))
+    sayfa_no = Column(Integer)
+    resim_yolu = Column(String(500), nullable=False)
+    aciklama = Column(Text, nullable=True)
+
+# YETKİ YÖNETİMİ MODÜLÜ (MODÜL 10)
+
+class Rol(Base):
+    __tablename__ = "roller"
+    id = Column(Integer, primary_key=True, index=True)
+    ad = Column(String(100), unique=True, nullable=False)
+    aciklama = Column(Text, nullable=True)
+
+class Yetki(Base):
+    __tablename__ = "yetkiler"
+    id = Column(Integer, primary_key=True, index=True)
+    rol_id = Column(Integer, ForeignKey("roller.id"))
+    modul = Column(String(100))  # urunler, siparisler, uyeler vb.
+    okuma = Column(Boolean, default=False)
+    yazma = Column(Boolean, default=False)
+    silme = Column(Boolean, default=False)
+
+# FORM BUILDER MODÜLÜ (MODÜL 14)
+
+class Form(Base):
+    __tablename__ = "formlar"
+    id = Column(Integer, primary_key=True, index=True)
+    ad = Column(String(200), nullable=False)
+    aciklama = Column(Text, nullable=True)
+    aktif = Column(Boolean, default=True)
+    olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+
+class FormCevap(Base):
+    __tablename__ = "form_cevaplar"
+    id = Column(Integer, primary_key=True, index=True)
+    form_id = Column(Integer, ForeignKey("formlar.id"))
+    kullanici_id = Column(Integer, ForeignKey("kullanicilar.id"), nullable=True)
+    cevaplar = Column(Text)  # JSON formatında
+    ip_adresi = Column(String(50), nullable=True)
+    tarih = Column(DateTime(timezone=True), default=get_turkey_time)
+
 # E-TİCARET VE ÜRÜN YÖNETİMİ MODÜLÜ (MODÜL 3)
 
 class Marka(Base):

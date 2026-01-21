@@ -14,7 +14,7 @@ from contextlib import asynccontextmanager
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from . import models
 from .database import SessionLocal, engine
-from .routers import auth, mlm, shop, general, admin, admin_products, dashboard, home, content, ebulten
+from .routers import auth, mlm, shop, general, admin, admin_products, dashboard, home, content, ebulten, sms, banks, catalogs, roles, forms
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,6 +36,11 @@ app.include_router(dashboard.router)
 app.include_router(home.router)
 app.include_router(content.router)
 app.include_router(ebulten.router)
+app.include_router(sms.router)
+app.include_router(banks.router)
+app.include_router(catalogs.router)
+app.include_router(roles.router)
+app.include_router(forms.router)
 
 def format_large_number(value):
     if value is None:
