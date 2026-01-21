@@ -278,6 +278,69 @@ class Varis(Base):
     adres = Column(Text)
     olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
 
+# E-BÜLTEN MODÜLÜ (MODÜL 6)
+
+class EBultenAbone(Base):
+    __tablename__ = "ebulten_aboneler"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(255), unique=True, index=True, nullable=False)
+    ad_soyad = Column(String(150), nullable=True)
+    aktif = Column(Boolean, default=True)
+    dogrulandi = Column(Boolean, default=False)
+    dogrulama_token = Column(String(100), nullable=True)
+    kayit_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+    kayit_ip = Column(String(50), nullable=True)
+
+class EBultenSablon(Base):
+    __tablename__ = "ebulten_sablonlar"
+
+    id = Column(Integer, primary_key=True, index=True)
+    ad = Column(String(200), nullable=False)
+    konu = Column(String(300), nullable=False)
+    html_icerik = Column(Text, nullable=False)
+
+    # Placeholder'lar: {{ad_soyad}}, {{email}}, {{unsubscribe_link}}
+    aciklama = Column(Text, nullable=True)
+
+    olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+    guncelleme_tarihi = Column(DateTime(timezone=True), default=get_turkey_time, onupdate=get_turkey_time)
+
+class EBultenKampanya(Base):
+    __tablename__ = "ebulten_kampanyalar"
+
+    id = Column(Integer, primary_key=True, index=True)
+    ad = Column(String(200), nullable=False)
+    sablon_id = Column(Integer, ForeignKey("ebulten_sablonlar.id"), nullable=True)
+    konu = Column(String(300), nullable=False)
+    html_icerik = Column(Text, nullable=False)
+
+    # İstatistikler
+    gonderilecek_sayi = Column(Integer, default=0)
+    gonderilen_sayi = Column(Integer, default=0)
+    acilan_sayi = Column(Integer, default=0)
+    tiklanan_sayi = Column(Integer, default=0)
+
+    durum = Column(String(50), default="taslak")  # taslak, gonderiliyor, tamamlandi, iptal
+    gonderim_tarihi = Column(DateTime(timezone=True), nullable=True)
+    olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+
+class EBultenGonderim(Base):
+    __tablename__ = "ebulten_gonderimler"
+
+    id = Column(Integer, primary_key=True, index=True)
+    kampanya_id = Column(Integer, ForeignKey("ebulten_kampanyalar.id"))
+    abone_id = Column(Integer, ForeignKey("ebulten_aboneler.id"))
+
+    gonderildi = Column(Boolean, default=False)
+    gonderim_tarihi = Column(DateTime(timezone=True), nullable=True)
+    acildi = Column(Boolean, default=False)
+    acilma_tarihi = Column(DateTime(timezone=True), nullable=True)
+    tiklandi = Column(Boolean, default=False)
+    tiklama_tarihi = Column(DateTime(timezone=True), nullable=True)
+
+    hata_mesaji = Column(Text, nullable=True)
+
 # E-TİCARET VE ÜRÜN YÖNETİMİ MODÜLÜ (MODÜL 3)
 
 class Marka(Base):
