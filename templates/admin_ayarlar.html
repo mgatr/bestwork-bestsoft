@@ -473,101 +473,199 @@
                  </div>
             </div>
 
-        </div>
-    </main>
-
-</body>
-</html>
-
             <!-- SMS Modülü (Modül 7) -->
-            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative">
-                 <div class="absolute top-0 right-0 bg-orange-100 text-orange-900 text-[10px] font-bold px-4 py-2 rounded-bl-2xl">MODÜL 7</div>
+            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+
+                 <!-- Module Badge -->
+                 <div class="absolute top-0 right-0 bg-orange-100 text-orange-900 text-[10px] font-bold tracking-wider px-4 py-2 rounded-bl-2xl">
+                     MODÜL 7
+                 </div>
+
                  <div class="w-20 h-20 shrink-0 bg-orange-100 text-orange-700 rounded-[24px] flex items-center justify-center">
                     <span class="material-symbols-outlined text-[40px]">sms</span>
                  </div>
-                 <div class="flex-1">
-                     <h3 class="text-[24px] font-normal mb-2">SMS Modülü</h3>
-                     <p class="text-sm text-gray-600 mb-6">Toplu SMS gönderimi ve kampanya yönetimi</p>
-                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <a href="/admin/sms/campaigns" class="border rounded-xl p-3 hover:bg-black/5">
-                            <span class="material-symbols-outlined text-orange-600">campaign</span>
-                            <span class="ml-2">SMS Kampanyaları</span>
+
+                 <div class="flex-1 w-full">
+                     <h3 class="text-[24px] font-normal text-md-onSurface mb-2">SMS Sistemi</h3>
+                     <p class="text-md-onSurfaceVariant mb-6 text-sm">Toplu SMS gönderimi ve kampanya yönetimi</p>
+
+                     <!-- Action Buttons for Module Features -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+
+                        <a href="/admin/sms/campaigns" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">campaign</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">SMS Kampanyaları</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Toplu gönderim</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/sms/logs" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">history</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">SMS Geçmişi</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Gönderim kayıtları</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
                         </a>
                      </div>
                  </div>
             </div>
 
             <!-- Banka Modülü (Modül 8) -->
-            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative">
-                 <div class="absolute top-0 right-0 bg-emerald-100 text-emerald-900 text-[10px] font-bold px-4 py-2 rounded-bl-2xl">MODÜL 8</div>
+            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+
+                 <!-- Module Badge -->
+                 <div class="absolute top-0 right-0 bg-emerald-100 text-emerald-900 text-[10px] font-bold tracking-wider px-4 py-2 rounded-bl-2xl">
+                     MODÜL 8
+                 </div>
+
                  <div class="w-20 h-20 shrink-0 bg-emerald-100 text-emerald-700 rounded-[24px] flex items-center justify-center">
                     <span class="material-symbols-outlined text-[40px]">account_balance</span>
                  </div>
-                 <div class="flex-1">
-                     <h3 class="text-[24px] font-normal mb-2">Banka & Ödeme</h3>
-                     <p class="text-sm text-gray-600 mb-6">Banka hesapları ve döviz yönetimi</p>
-                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <a href="/admin/banks" class="border rounded-xl p-3 hover:bg-black/5">
-                            <span class="material-symbols-outlined text-emerald-600">account_balance</span>
-                            <span class="ml-2">Bankalar</span>
+
+                 <div class="flex-1 w-full">
+                     <h3 class="text-[24px] font-normal text-md-onSurface mb-2">Banka & Ödeme Modülü</h3>
+                     <p class="text-md-onSurfaceVariant mb-6 text-sm">Banka hesapları, döviz kurları ve ödeme yönetimi</p>
+
+                     <!-- Action Buttons for Module Features -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+
+                        <a href="/admin/banks/list" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">account_balance</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Bankalar</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Banka listesi</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
                         </a>
-                        <a href="/admin/currency" class="border rounded-xl p-3 hover:bg-black/5">
-                            <span class="material-symbols-outlined text-emerald-600">currency_exchange</span>
-                            <span class="ml-2">Döviz Kurları</span>
+
+                        <a href="/admin/banks/accounts" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">account_balance_wallet</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Banka Hesapları</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Hesap yönetimi</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/banks/currency" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">currency_exchange</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Döviz Kurları</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Kur yönetimi</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
                         </a>
                      </div>
                  </div>
             </div>
 
             <!-- Katalog Modülü (Modül 9) -->
-            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative">
-                 <div class="absolute top-0 right-0 bg-violet-100 text-violet-900 text-[10px] font-bold px-4 py-2 rounded-bl-2xl">MODÜL 9</div>
-                 <div class="w-20 h-20 shrink-0 bg-violet-100 text-violet-700 rounded-[24px] flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[40px]">book</span>
+            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+
+                 <!-- Module Badge -->
+                 <div class="absolute top-0 right-0 bg-violet-100 text-violet-900 text-[10px] font-bold tracking-wider px-4 py-2 rounded-bl-2xl">
+                     MODÜL 9
                  </div>
-                 <div class="flex-1">
-                     <h3 class="text-[24px] font-normal mb-2">Kataloglar</h3>
-                     <p class="text-sm text-gray-600 mb-6">Online katalog ve sayfa yönetimi</p>
-                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <a href="/admin/catalogs" class="border rounded-xl p-3 hover:bg-black/5">
-                            <span class="material-symbols-outlined text-violet-600">collections_bookmark</span>
-                            <span class="ml-2">Katalog Listesi</span>
+
+                 <div class="w-20 h-20 shrink-0 bg-violet-100 text-violet-700 rounded-[24px] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[40px]">menu_book</span>
+                 </div>
+
+                 <div class="flex-1 w-full">
+                     <h3 class="text-[24px] font-normal text-md-onSurface mb-2">Katalog Modülü</h3>
+                     <p class="text-md-onSurfaceVariant mb-6 text-sm">Dijital ürün katalogları ve sayfa yönetimi</p>
+
+                     <!-- Action Buttons for Module Features -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+
+                        <a href="/admin/catalogs/list" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-violet-50 text-violet-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">collections_bookmark</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Katalog Listesi</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Tüm kataloglar</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
                         </a>
                      </div>
                  </div>
             </div>
 
             <!-- Kullanıcı Yetkileri (Modül 10) -->
-            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative">
-                 <div class="absolute top-0 right-0 bg-red-100 text-red-900 text-[10px] font-bold px-4 py-2 rounded-bl-2xl">MODÜL 10</div>
+            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+
+                 <!-- Module Badge -->
+                 <div class="absolute top-0 right-0 bg-red-100 text-red-900 text-[10px] font-bold tracking-wider px-4 py-2 rounded-bl-2xl">
+                     MODÜL 10
+                 </div>
+
                  <div class="w-20 h-20 shrink-0 bg-red-100 text-red-700 rounded-[24px] flex items-center justify-center">
                     <span class="material-symbols-outlined text-[40px]">admin_panel_settings</span>
                  </div>
-                 <div class="flex-1">
-                     <h3 class="text-[24px] font-normal mb-2">Kullanıcı & Yetki</h3>
-                     <p class="text-sm text-gray-600 mb-6">Admin rolleri ve yetki yönetimi</p>
-                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <a href="/admin/roles" class="border rounded-xl p-3 hover:bg-black/5">
-                            <span class="material-symbols-outlined text-red-600">badge</span>
-                            <span class="ml-2">Roller</span>
+
+                 <div class="flex-1 w-full">
+                     <h3 class="text-[24px] font-normal text-md-onSurface mb-2">Yetki Yönetimi Modülü</h3>
+                     <p class="text-md-onSurfaceVariant mb-6 text-sm">Rol tabanlı erişim kontrolü ve yetkilendirme sistemi</p>
+
+                     <!-- Action Buttons for Module Features -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+
+                        <a href="/admin/roles/list" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-red-50 text-red-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">badge</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Roller</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Kullanıcı rolleri</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
                         </a>
                      </div>
                  </div>
             </div>
 
             <!-- Form Builder (Modül 14) -->
-            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative">
-                 <div class="absolute top-0 right-0 bg-lime-100 text-lime-900 text-[10px] font-bold px-4 py-2 rounded-bl-2xl">MODÜL 14</div>
-                 <div class="w-20 h-20 shrink-0 bg-lime-100 text-lime-700 rounded-[24px] flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[40px]">text_snippet</span>
+            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+
+                 <!-- Module Badge -->
+                 <div class="absolute top-0 right-0 bg-lime-100 text-lime-900 text-[10px] font-bold tracking-wider px-4 py-2 rounded-bl-2xl">
+                     MODÜL 14
                  </div>
-                 <div class="flex-1">
-                     <h3 class="text-[24px] font-normal mb-2">Form Builder</h3>
-                     <p class="text-sm text-gray-600 mb-6">Dinamik form oluşturma ve cevaplar</p>
-                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <a href="/admin/forms" class="border rounded-xl p-3 hover:bg-black/5">
-                            <span class="material-symbols-outlined text-lime-600">dynamic_form</span>
-                            <span class="ml-2">Formlar</span>
+
+                 <div class="w-20 h-20 shrink-0 bg-lime-100 text-lime-700 rounded-[24px] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[40px]">description</span>
+                 </div>
+
+                 <div class="flex-1 w-full">
+                     <h3 class="text-[24px] font-normal text-md-onSurface mb-2">Form Builder Modülü</h3>
+                     <p class="text-md-onSurfaceVariant mb-6 text-sm">Dinamik form oluşturma, özelleştirme ve yanıt toplama</p>
+
+                     <!-- Action Buttons for Module Features -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+
+                        <a href="/admin/forms/list" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-lime-50 text-lime-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">dynamic_form</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Formlar</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Tüm formlar</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
                         </a>
                      </div>
                  </div>
