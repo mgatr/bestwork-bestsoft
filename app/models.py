@@ -155,7 +155,7 @@ class Slider(Base):
 
 class Sertifika(Base):
     __tablename__ = "sertifikalar_tablosu"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     baslik = Column(String(200), nullable=True)
     aciklama = Column(String(500), nullable=True)
@@ -163,6 +163,106 @@ class Sertifika(Base):
     sira = Column(Integer, default=0)
     aktif = Column(Boolean, default=True)
     olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+
+# İÇERİK YÖNETİMİ MODÜLÜ (MODÜL 5)
+
+class Banner(Base):
+    __tablename__ = "banners"
+
+    id = Column(Integer, primary_key=True, index=True)
+    baslik = Column(String(200), nullable=True)
+    aciklama = Column(Text, nullable=True)
+    resim_yolu = Column(String(500), nullable=False)
+    link = Column(String(500), nullable=True)
+    konum = Column(String(50), default="anasayfa")  # anasayfa, kategori, urun_detay, sepet
+    sira = Column(Integer, default=0)
+    aktif = Column(Boolean, default=True)
+    baslangic_tarihi = Column(DateTime(timezone=True), nullable=True)
+    bitis_tarihi = Column(DateTime(timezone=True), nullable=True)
+    olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+
+class BlogYazi(Base):
+    __tablename__ = "blog_yazilari"
+
+    id = Column(Integer, primary_key=True, index=True)
+    baslik = Column(String(300), nullable=False, index=True)
+    slug = Column(String(350), unique=True, index=True)
+    ozet = Column(Text, nullable=True)
+    icerik = Column(Text, nullable=False)
+    kapak_resmi = Column(String(500), nullable=True)
+    yazar = Column(String(100), default="Admin")
+    kategori = Column(String(100), nullable=True)
+    etiketler = Column(String(500), nullable=True)  # Virgülle ayrılmış
+
+    # SEO
+    seo_baslik = Column(String(200), nullable=True)
+    seo_aciklama = Column(Text, nullable=True)
+
+    goruntulenme = Column(Integer, default=0)
+    aktif = Column(Boolean, default=True)
+    yayinlanma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+    guncelleme_tarihi = Column(DateTime(timezone=True), default=get_turkey_time, onupdate=get_turkey_time)
+
+class Etkinlik(Base):
+    __tablename__ = "etkinlikler"
+
+    id = Column(Integer, primary_key=True, index=True)
+    baslik = Column(String(300), nullable=False)
+    aciklama = Column(Text, nullable=True)
+    icerik = Column(Text, nullable=True)
+    resim_yolu = Column(String(500), nullable=True)
+
+    # Tarih ve Yer
+    etkinlik_tarihi = Column(DateTime(timezone=True), nullable=False)
+    bitis_tarihi = Column(DateTime(timezone=True), nullable=True)
+    konum = Column(String(300), nullable=True)
+    adres = Column(Text, nullable=True)
+    online_link = Column(String(500), nullable=True)
+
+    # Kayıt
+    kayit_gerekli = Column(Boolean, default=False)
+    max_katilimci = Column(Integer, nullable=True)
+    kayit_sayisi = Column(Integer, default=0)
+
+    aktif = Column(Boolean, default=True)
+    olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+
+class Anket(Base):
+    __tablename__ = "anketler"
+
+    id = Column(Integer, primary_key=True, index=True)
+    baslik = Column(String(300), nullable=False)
+    aciklama = Column(Text, nullable=True)
+
+    # Tarih
+    baslangic_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+    bitis_tarihi = Column(DateTime(timezone=True), nullable=True)
+
+    # Ayarlar
+    coklu_secim = Column(Boolean, default=False)
+    sonuclari_goster = Column(Boolean, default=True)
+
+    aktif = Column(Boolean, default=True)
+    olusturma_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
+
+class AnketSecenegi(Base):
+    __tablename__ = "anket_secenekleri"
+
+    id = Column(Integer, primary_key=True, index=True)
+    anket_id = Column(Integer, ForeignKey("anketler.id"))
+    secenek = Column(String(200), nullable=False)
+    sira = Column(Integer, default=0)
+    oy_sayisi = Column(Integer, default=0)
+
+class AnketOy(Base):
+    __tablename__ = "anket_oylari"
+
+    id = Column(Integer, primary_key=True, index=True)
+    anket_id = Column(Integer, ForeignKey("anketler.id"))
+    secenek_id = Column(Integer, ForeignKey("anket_secenekleri.id"))
+    kullanici_id = Column(Integer, ForeignKey("kullanicilar.id"), nullable=True)
+    ip_adresi = Column(String(50), nullable=True)
+    oy_tarihi = Column(DateTime(timezone=True), default=get_turkey_time)
 
 
 class Varis(Base):

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Anketler - BestSoft</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-gray-50" x-data="{ showAddModal: false, deleteConfirm: null }">
+    <div class="max-w-7xl mx-auto p-6">
+        <div class="mb-6">
+            <a href="/admin/ayarlar" class="text-blue-600 hover:underline">← Ayarlara Dön</a>
+            <h1 class="text-3xl font-bold mt-2">Anketler</h1>
+        </div>
+
+        <button @click="showAddModal = true" class="bg-blue-600 text-white px-4 py-2 rounded mb-4">Yeni Anket Oluştur</button>
+
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-3 text-left">Başlık</th>
+                        <th class="px-4 py-3 text-left">Oluşturma Tarihi</th>
+                        <th class="px-4 py-3 text-left">Durum</th>
+                        <th class="px-4 py-3 text-left">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for anket in anketler %}
+                    <tr class="border-t">
+                        <td class="px-4 py-3">{{ anket.baslik }}</td>
+                        <td class="px-4 py-3">{{ anket.olusturma_tarihi.strftime('%d.%m.%Y') }}</td>
+                        <td class="px-4 py-3">
+                            <span class="px-2 py-1 rounded text-xs {% if anket.aktif %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-600{% endif %}">
+                                {% if anket.aktif %}Aktif{% else %}Pasif{% endif %}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <button @click="deleteConfirm = {{ anket.id }}" class="text-red-600 hover:text-red-800">Sil</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add Modal -->
+    <div x-show="showAddModal" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" @click.self="showAddModal = false">
+        <div class="bg-white rounded-lg p-6 max-w-lg w-full">
+            <h2 class="text-2xl font-bold mb-4">Yeni Anket</h2>
+            <form method="POST" action="/admin/content/polls/add" class="space-y-4">
+                <div>
+                    <label class="block mb-1">Anket Başlığı</label>
+                    <input type="text" name="baslik" required class="w-full px-3 py-2 border rounded" placeholder="Hangi ürünü tercih edersiniz?">
+                </div>
+                <div>
+                    <label class="block mb-1">Açıklama (Opsiyonel)</label>
+                    <textarea name="aciklama" rows="2" class="w-full px-3 py-2 border rounded"></textarea>
+                </div>
+                <p class="text-sm text-gray-600">Not: Anket seçeneklerini anket oluşturduktan sonra ekleyebilirsiniz.</p>
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Oluştur</button>
+                    <button type="button" @click="showAddModal = false" class="bg-gray-500 text-white px-4 py-2 rounded">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>[x-cloak] { display: none !important; }</style>
+</body>
+</html>

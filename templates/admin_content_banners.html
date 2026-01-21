@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reklam Bannerları - BestSoft</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{
+    mobileMenuOpen: false,
+    showAddModal: false,
+    deleteConfirm: null
+}">
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <a href="/admin/ayarlar" class="text-blue-600 hover:underline mb-2 inline-block">← Ayarlara Dön</a>
+            <h1 class="text-4xl font-bold text-gray-900">Reklam Bannerları</h1>
+            <p class="text-gray-600 mt-2">Kampanya görselleri ve reklam alanlarını yönetin</p>
+        </div>
+
+        <!-- Başarı Mesajı -->
+        {% if request.query_params.get('success') %}
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+            {% if request.query_params.get('success') == 'added' %}
+                ✓ Banner başarıyla eklendi!
+            {% elif request.query_params.get('success') == 'deleted' %}
+                ✓ Banner başarıyla silindi!
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Yeni Banner Ekle Butonu -->
+        <div class="mb-6">
+            <button @click="showAddModal = true"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined">add_circle</span>
+                Yeni Banner Ekle
+            </button>
+        </div>
+
+        <!-- Bannerlar -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {% for banner in banners %}
+            <div class="bg-white rounded-xl shadow-md overflow-hidden {% if not banner.aktif %}opacity-60{% endif %}">
+                <div class="aspect-[16/9] bg-gray-200 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-6xl text-gray-400">image</span>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">{{ banner.baslik or 'İsimsiz Banner' }}</h3>
+                            <p class="text-sm text-gray-600">{{ banner.konum }}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold
+                            {% if banner.aktif %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-600{% endif %}">
+                            {% if banner.aktif %}Aktif{% else %}Pasif{% endif %}
+                        </span>
+                    </div>
+
+                    {% if banner.aciklama %}
+                    <p class="text-gray-700 mb-3">{{ banner.aciklama }}</p>
+                    {% endif %}
+
+                    {% if banner.link %}
+                    <p class="text-sm text-blue-600 truncate mb-3">🔗 {{ banner.link }}</p>
+                    {% endif %}
+
+                    <div class="flex gap-2">
+                        <button @click="deleteConfirm = {{ banner.id }}"
+                                class="flex-1 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-sm">delete</span>
+                            Sil
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if not banners %}
+            <div class="col-span-2 text-center py-12 text-gray-500">
+                <span class="material-symbols-outlined text-6xl mb-4 block">panorama</span>
+                <p class="text-lg">Henüz banner eklenmemiş</p>
+                <p class="text-sm">Yeni banner eklemek için yukarıdaki butonu kullanın</p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Yeni Banner Ekle Modal -->
+    <div x-show="showAddModal"
+         x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+         @click.self="showAddModal = false">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Yeni Banner Ekle</h2>
+                <button @click="showAddModal = false" class="text-gray-500 hover:text-gray-700">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form method="POST" action="/admin/content/banners/add" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Banner Başlığı</label>
+                    <input type="text" name="baslik" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                           placeholder="Örn: Yaz Kampanyası">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Açıklama</label>
+                    <textarea name="aciklama" rows="2"
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                              placeholder="Kısa açıklama..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Link (Opsiyonel)</label>
+                    <input type="url" name="link"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                           placeholder="https://...">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Konum</label>
+                    <select name="konum" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="anasayfa">Ana Sayfa</option>
+                        <option value="kategori">Kategori Sayfaları</option>
+                        <option value="urun_detay">Ürün Detay</option>
+                        <option value="sepet">Sepet Sayfası</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <input type="checkbox" name="aktif" value="true" checked id="aktif"
+                           class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                    <label for="aktif" class="text-sm text-gray-700">Banner aktif olsun</label>
+                </div>
+
+                <div class="pt-4 flex gap-3">
+                    <button type="submit"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">add_circle</span>
+                        Banner Ekle
+                    </button>
+                    <button type="button" @click="showAddModal = false"
+                            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                        İptal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Silme Onay Modal -->
+    <div x-show="deleteConfirm !== null"
+         x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+         @click.self="deleteConfirm = null">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-red-600 text-4xl">warning</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Banner'ı Sil</h2>
+                <p class="text-gray-600 mb-6">Bu banner'ı silmek istediğinizden emin misiniz?</p>
+
+                <div class="flex gap-3">
+                    <form :action="'/admin/content/banners/delete/' + deleteConfirm" method="POST" class="flex-1">
+                        <button type="submit"
+                                class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                            Evet, Sil
+                        </button>
+                    </form>
+                    <button type="button" @click="deleteConfirm = null"
+                            class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                        İptal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</body>
+</html>
