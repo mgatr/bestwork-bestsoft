@@ -10,16 +10,10 @@ from typing import Optional
 
 from app.dependencies import get_db
 from app import models
+from .admin import get_current_admin
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
-
-def get_current_admin(request: Request):
-    """Admin oturum kontrolü"""
-    admin_id = request.cookies.get("admin_session")
-    if not admin_id:
-        return None
-    return {"id": admin_id}
 
 # ============================================================================
 # KATALOG YÖNETİMİ
