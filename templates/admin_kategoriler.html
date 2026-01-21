@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategoriler - BestSoft Manager</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        // Admin Panel Colors (MD3)
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        },
+                        // Compatibility colors for usage within table/forms (mapped to MD3)
+                        surface: {
+                             DEFAULT: '#FEF7FF',
+                             container: {
+                                 low: '#F3EDF7',
+                                 DEFAULT: '#F3EDF7'
+                             }
+                        },
+                        error: '#B3261E'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <span class="inline-block px-4 py-1.5 bg-md-primaryContainer text-md-onPrimaryContainer text-sm font-semibold rounded-full mb-3">⚡ Admin Panel</span>
+                <h1 class="text-4xl font-normal text-md-onSurface mb-2">Kategoriler</h1>
+                <p class="text-lg text-md-onSurfaceVariant">Kategori listesini yönetin</p>
+            </div>
+        </div>
+
+        <div class="bg-md-surface rounded-[24px] shadow-sm overflow-hidden border border-md-outlineVariant/20">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-md-outlineVariant/20">
+                    <thead class="bg-surface-container-low">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-md-onSurface uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-md-onSurface uppercase tracking-wider">Ad</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-md-onSurface uppercase tracking-wider">Açıklama</th>
+                            <th class="px-6 py-4 text-left text-xs font-bold text-md-onSurface uppercase tracking-wider">Oluşturulma</th>
+                            <th class="px-6 py-4 text-right text-xs font-bold text-md-onSurface uppercase tracking-wider">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-md-surface divide-y divide-md-outlineVariant/20">
+                        {% for kategori in kategoriler %}
+                        <tr class="hover:bg-md-primaryContainer/10 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-md-onSurface">#{{ kategori.id }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-md-onSurface">{{ kategori.ad }}</td>
+                            <td class="px-6 py-4 text-sm text-md-onSurfaceVariant">{{ kategori.aciklama or '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-md-onSurfaceVariant">{{ kategori.olusturulma_tarihi.strftime('%d.%m.%Y') if kategori.olusturulma_tarihi else '-' }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <form action="/admin/kategori-sil" method="post" class="inline-block" onsubmit="return confirm('Bu kategoriyi silmek istediğinize emin misiniz?');">
+                                    <input type="hidden" name="kategori_id" value="{{ kategori.id }}">
+                                    <button type="submit" class="text-error hover:text-red-700 transition-colors font-bold">Sil</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Yeni Kategori Ekleme Formu -->
+        <div class="mt-8 bg-md-surface rounded-[24px] shadow-sm p-8 border border-md-outlineVariant/20">
+            <h3 class="text-2xl font-normal text-md-onSurface mb-6">Yeni Kategori Ekle</h3>
+            <form action="/admin/kategoriler" method="post">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="ad" class="block text-sm font-medium text-md-onSurface mb-2">Kategori Adı *</label>
+                        <input type="text" id="ad" name="ad" required class="w-full px-4 py-3 border border-md-outline rounded-xl focus:border-md-primary focus:outline-none transition bg-md-surface text-md-onSurface">
+                    </div>
+                    <div>
+                        <label for="aciklama" class="block text-sm font-medium text-md-onSurface mb-2">Açıklama</label>
+                        <input type="text" id="aciklama" name="aciklama" class="w-full px-4 py-3 border border-md-outline rounded-xl focus:border-md-primary focus:outline-none transition bg-md-surface text-md-onSurface">
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button type="submit" class="px-8 py-3 bg-md-primary text-md-onPrimary font-medium rounded-full shadow-sm hover:shadow-md hover:bg-md-primary/90 transition transform hover:-translate-y-0.5">
+                        Kategori Oluştur
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

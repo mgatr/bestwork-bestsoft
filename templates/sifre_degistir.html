@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<!-- Breadcrumb & Header -->
+<div class="bg-surface-container-low py-3 px-4 sm:px-6 lg:px-8 border-b border-outline-variant mb-6">
+    <div class="max-w-7xl mx-auto flex items-center text-sm text-on-surface-variant">
+        <a href="/" class="hover:text-primary font-medium">ANASAYFA</a>
+        <span class="mx-2 text-outline">/</span>
+        <span class="text-on-surface font-medium">Şifre Değiştir</span>
+    </div>
+</div>
+
+<div class="min-h-[calc(100vh-200px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-surface-container-low">
+    <div class="max-w-md w-full space-y-8 bg-surface-container p-10 rounded-3xl shadow-xl border border-outline-variant/20">
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-3xl text-primary">lock_reset</span>
+            </div>
+            <h2 class="text-3xl font-display font-bold text-on-surface">
+                Şifre Değiştir
+            </h2>
+            <p class="mt-2 text-sm text-on-surface-variant">
+                Hesabınızın güvenliği için güçlü bir şifre belirleyin.
+            </p>
+        </div>
+        
+        {% if hata %}
+        <div class="bg-error/10 border border-error/20 text-error px-4 py-3 rounded-xl flex items-center gap-2" role="alert">
+            <span class="material-symbols-outlined text-xl">error</span>
+            <span class="text-sm font-medium">{{ hata }}</span>
+        </div>
+        {% endif %}
+
+        {% if basari %}
+        <div class="bg-tertiary-container border border-tertiary/20 text-on-tertiary-container px-4 py-3 rounded-xl flex items-center gap-2" role="alert">
+            <span class="material-symbols-outlined text-xl">check_circle</span>
+            <span class="text-sm font-medium">{{ basari }}</span>
+        </div>
+        {% endif %}
+
+        <form class="mt-8 space-y-6" action="/sifre-degistir" method="POST">
+            <div class="space-y-4">
+                <div>
+                    <label for="mevcut_sifre" class="block text-sm font-medium text-on-surface-variant mb-1">Mevcut Şifre</label>
+                    <div class="relative">
+                        <input id="mevcut_sifre" name="mevcut_sifre" type="password" required 
+                            class="appearance-none block w-full px-4 py-3 bg-surface-bright text-on-surface border border-outline-variant rounded-xl placeholder-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors sm:text-sm" 
+                            placeholder="••••••••">
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50">lock</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="yeni_sifre" class="block text-sm font-medium text-on-surface-variant mb-1">Yeni Şifre</label>
+                    <div class="relative">
+                        <input id="yeni_sifre" name="yeni_sifre" type="password" required 
+                            class="appearance-none block w-full px-4 py-3 bg-surface-bright text-on-surface border border-outline-variant rounded-xl placeholder-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors sm:text-sm" 
+                            placeholder="••••••••">
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50">key</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="yeni_sifre_tekrar" class="block text-sm font-medium text-on-surface-variant mb-1">Yeni Şifre (Tekrar)</label>
+                    <div class="relative">
+                        <input id="yeni_sifre_tekrar" name="yeni_sifre_tekrar" type="password" required 
+                            class="appearance-none block w-full px-4 py-3 bg-surface-bright text-on-surface border border-outline-variant rounded-xl placeholder-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors sm:text-sm" 
+                            placeholder="••••••••">
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50">key</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end">
+                <a href="/panel/{{ request.state.user.id }}" class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors mr-4">
+                    İptal
+                </a>
+                <button type="submit" class="group flex items-center justify-center gap-2 py-3 px-6 border border-transparent text-sm font-medium rounded-full text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-md hover:shadow-lg active:scale-95">
+                    <span class="material-symbols-outlined group-hover:rotate-180 transition-transform">refresh</span>
+                    Şifreyi Güncelle
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

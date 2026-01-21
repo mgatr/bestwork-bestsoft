@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<!-- Breadcrumb & Header -->
+<div class="bg-surface-container-low py-3 px-4 sm:px-6 lg:px-8 border-b border-outline-variant mb-6">
+    <div class="max-w-7xl mx-auto flex items-center text-sm text-on-surface-variant">
+        <a href="/" class="hover:text-primary font-medium">ANASAYFA</a>
+        <span class="mx-2 text-outline">/</span>
+        <span class="text-on-surface font-medium">Üyelik Bilgilerim</span>
+    </div>
+</div>
+
+<section class="bg-background px-4 py-10">
+    <div class="max-w-4xl mx-auto mt-1 space-y-6">
+        <div class="bg-surface rounded-3xl shadow-2xl border border-outline-variant/40 overflow-hidden">
+            <div class="px-6 py-5 border-b border-outline-variant/40">
+                <h2 class="text-lg font-semibold text-on-surface">Kişisel Bilgiler</h2>
+                <p class="text-sm text-on-surface-variant mt-1">Üyelik detaylarınız aşağıda listelenmiştir.</p>
+            </div>
+            
+            <div class="divide-y divide-outline-variant/40">
+                <!-- Ad Soyad -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Ad Soyad</div>
+                    <div class="sm:col-span-2 text-sm font-semibold text-on-surface">{{ user.tam_ad }}</div>
+                </div>
+
+                <!-- TC -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">TC Kimlik No</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">{{ user.tc_no or '—' }}</div>
+                </div>
+
+                <!-- E-posta -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">E-posta</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">{{ user.email }}</div>
+                </div>
+
+                <!-- Doğum Tarihi -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Doğum Tarihi</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">
+                        {% if user.dogum_tarihi %}
+                        {{ user.dogum_tarihi.strftime('%d.%m.%Y') }}
+                        {% else %}
+                        —
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Cinsiyet -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Cinsiyet</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">{{ user.cinsiyet or '—' }}</div>
+                </div>
+
+                <!-- Ülke -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Ülke</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">{{ user.ulke or 'Türkiye' }}</div>
+                </div>
+
+                <!-- Şehir -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Şehir</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">{{ user.il or '—' }}</div>
+                </div>
+
+                <!-- İlçe -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">İlçe</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">{{ user.ilce or '—' }}</div>
+                </div>
+
+                <!-- Mahalle -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Mahalle</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">{{ user.mahalle or '—' }}</div>
+                </div>
+
+                <!-- Adres -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Adres</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">{{ user.adres or '—' }}</div>
+                </div>
+
+                <!-- Üyelik Seviyesi -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Üyelik Seviyesi</div>
+                    <div class="sm:col-span-2 text-sm font-semibold text-primary">
+                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wide">
+                            {{ user.rutbe }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Kayıt Tarihi -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Kayıt Tarihiniz</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">
+                        {{ user.kayit_tarihi.strftime('%d.%m.%Y') }} 
+                        <span class="text-on-surface-variant text-xs ml-1">({{ gun_farki }} gündür sisteme kayıtlısınız)</span>
+                    </div>
+                </div>
+
+                <!-- Cep Telefonu -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Cep Telefonu</div>
+                    <div class="sm:col-span-2 text-sm font-mono text-on-surface">{{ user.telefon or '—' }}</div>
+                </div>
+
+                <!-- Sponsor Üye -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Sponsor Üyeniz</div>
+                    <div class="sm:col-span-2 text-sm text-on-surface">
+                        {% if sponsor %}
+                        {{ sponsor.tam_ad }} -- {{ sponsor.telefon }}
+                        {% else %}
+                        —
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Kazandıran Link -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Kazandıran Link (Üye Kaydı)</div>
+                    <div class="sm:col-span-2 text-sm text-primary break-all">
+                        <a href="{{ request.base_url }}kayit?ref={{ user.uye_no }}" target="_blank" class="hover:underline flex items-center gap-1">
+                            {{ request.base_url }}kayit?ref={{ user.uye_no }}
+                            <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Üye Numarası -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 px-6 py-4 hover:bg-surface-container-low/50 transition">
+                    <div class="text-sm font-medium text-on-surface-variant">Üye Numarası</div>
+                    <div class="sm:col-span-2 text-sm font-mono font-bold text-on-surface">Üye Numaranız : {{ user.uye_no }}</div>
+                </div>
+            </div>
+
+            <div class="px-6 py-4 bg-surface-container-low border-t border-outline-variant/40 text-center">
+                <p class="text-sm text-on-surface-variant flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-primary">info</span>
+                    Bilgilerinizi değiştirmek için müşteri hizmetleri ile iletişime geçiniz
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

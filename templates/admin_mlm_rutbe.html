@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rütbe Sistemi - BestSoft</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{
+    mobileMenuOpen: false,
+    showAddModal: false,
+    editMode: {},
+    deleteConfirm: null
+}">
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <a href="/admin/ayarlar" class="text-blue-600 hover:underline mb-2 inline-block">← Ayarlara Dön</a>
+            <h1 class="text-4xl font-bold text-gray-900">Rütbe Sistemi</h1>
+            <p class="text-gray-600 mt-2">Kariyer basamakları ve gereksinimleri</p>
+        </div>
+
+        <!-- Başarı Mesajı -->
+        {% if request.query_params.get('basari') %}
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+            {% if request.query_params.get('basari') == 'eklendi' %}
+                ✓ Yeni rütbe başarıyla eklendi!
+            {% elif request.query_params.get('basari') == 'guncellendi' %}
+                ✓ Rütbe başarıyla güncellendi!
+            {% elif request.query_params.get('basari') == 'silindi' %}
+                ✓ Rütbe başarıyla silindi!
+            {% else %}
+                ✓ İşlem başarılı!
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Yeni Rütbe Ekle Butonu -->
+        <div class="mb-6">
+            <button @click="showAddModal = true"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined">add_circle</span>
+                Yeni Rütbe Ekle
+            </button>
+        </div>
+
+        <!-- Rütbeler -->
+        <div class="space-y-4">
+            {% for rutbe in rutbeler %}
+            <div class="bg-white rounded-xl shadow-md overflow-hidden border-l-4
+                        {% if rutbe.renk == 'gray' %}border-gray-400
+                        {% elif rutbe.renk == 'blue' %}border-blue-400
+                        {% elif rutbe.renk == 'green' %}border-green-400
+                        {% elif rutbe.renk == 'yellow' %}border-yellow-400
+                        {% elif rutbe.renk == 'orange' %}border-orange-400
+                        {% elif rutbe.renk == 'red' %}border-red-400
+                        {% elif rutbe.renk == 'purple' %}border-purple-400
+                        {% elif rutbe.renk == 'pink' %}border-pink-400
+                        {% else %}border-indigo-600{% endif %}"
+                 x-data="{ editing: false }">
+
+                <div class="p-6">
+                    <!-- Görüntüleme Modu -->
+                    <div x-show="!editing">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="material-symbols-outlined text-4xl
+                                        {% if rutbe.renk == 'gray' %}text-gray-500
+                                        {% elif rutbe.renk == 'blue' %}text-blue-500
+                                        {% elif rutbe.renk == 'green' %}text-green-500
+                                        {% elif rutbe.renk == 'yellow' %}text-yellow-500
+                                        {% elif rutbe.renk == 'orange' %}text-orange-500
+                                        {% elif rutbe.renk == 'red' %}text-red-500
+                                        {% elif rutbe.renk == 'purple' %}text-purple-600
+                                        {% elif rutbe.renk == 'pink' %}text-pink-500
+                                        {% else %}text-indigo-600{% endif %}">
+                                        military_tech
+                                    </span>
+                                    <div>
+                                        <h3 class="text-2xl font-bold text-gray-900">{{ rutbe.ad }}</h3>
+                                        <p class="text-sm text-gray-600">{{ rutbe.sira }}. Seviye</p>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    <!-- Sol PV Gereksinimi -->
+                                    <div class="flex items-center gap-3 bg-blue-50 p-4 rounded-lg">
+                                        <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-sm">arrow_back</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-600">Sol Kol PV</p>
+                                            <p class="text-xl font-bold text-gray-900">
+                                                {{ '{:,}'.format(rutbe.sol_pv).replace(',', '.') }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sağ PV Gereksinimi -->
+                                    <div class="flex items-center gap-3 bg-green-50 p-4 rounded-lg">
+                                        <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-gray-600">Sağ Kol PV</p>
+                                            <p class="text-xl font-bold text-gray-900">
+                                                {{ '{:,}'.format(rutbe.sag_pv).replace(',', '.') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Seviye Badge ve Butonlar -->
+                            <div class="ml-4 flex flex-col items-center gap-3">
+                                <div class="w-16 h-16 rounded-full bg-gradient-to-br
+                                    {% if rutbe.renk == 'gray' %}from-gray-400 to-gray-600
+                                    {% elif rutbe.renk == 'blue' %}from-blue-400 to-blue-600
+                                    {% elif rutbe.renk == 'green' %}from-green-400 to-green-600
+                                    {% elif rutbe.renk == 'yellow' %}from-yellow-400 to-yellow-600
+                                    {% elif rutbe.renk == 'orange' %}from-orange-400 to-orange-600
+                                    {% elif rutbe.renk == 'red' %}from-red-400 to-red-600
+                                    {% elif rutbe.renk == 'purple' %}from-purple-500 to-purple-700
+                                    {% elif rutbe.renk == 'pink' %}from-pink-400 to-pink-600
+                                    {% else %}from-indigo-500 to-indigo-700{% endif %}
+                                    flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                                    {{ rutbe.sira }}
+                                </div>
+                                <div class="flex gap-2">
+                                    <button @click="editing = true"
+                                            class="bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-lg transition-colors">
+                                        <span class="material-symbols-outlined text-sm">edit</span>
+                                    </button>
+                                    <button @click="deleteConfirm = {{ rutbe.id }}"
+                                            class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors">
+                                        <span class="material-symbols-outlined text-sm">delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Düzenleme Modu -->
+                    <div x-show="editing" style="display: none;">
+                        <form method="POST" action="/admin/mlm/rutbe/guncelle/{{ rutbe.id }}" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Rütbe Adı</label>
+                                    <input type="text" name="ad" value="{{ rutbe.ad }}" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Renk</label>
+                                    <select name="renk" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                        <option value="gray" {% if rutbe.renk == 'gray' %}selected{% endif %}>Gri</option>
+                                        <option value="blue" {% if rutbe.renk == 'blue' %}selected{% endif %}>Mavi</option>
+                                        <option value="green" {% if rutbe.renk == 'green' %}selected{% endif %}>Yeşil</option>
+                                        <option value="yellow" {% if rutbe.renk == 'yellow' %}selected{% endif %}>Sarı</option>
+                                        <option value="orange" {% if rutbe.renk == 'orange' %}selected{% endif %}>Turuncu</option>
+                                        <option value="red" {% if rutbe.renk == 'red' %}selected{% endif %}>Kırmızı</option>
+                                        <option value="purple" {% if rutbe.renk == 'purple' %}selected{% endif %}>Mor</option>
+                                        <option value="pink" {% if rutbe.renk == 'pink' %}selected{% endif %}>Pembe</option>
+                                        <option value="indigo" {% if rutbe.renk == 'indigo' %}selected{% endif %}>İndigo</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Sol Kol PV</label>
+                                    <input type="number" name="sol_pv" value="{{ rutbe.sol_pv }}" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Sağ Kol PV</label>
+                                    <input type="number" name="sag_pv" value="{{ rutbe.sag_pv }}" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <button type="submit"
+                                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">save</span>
+                                    Kaydet
+                                </button>
+                                <button type="button" @click="editing = false"
+                                        class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                                    İptal
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- Yeni Rütbe Ekle Modal -->
+    <div x-show="showAddModal"
+         x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+         @click.self="showAddModal = false">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Yeni Rütbe Ekle</h2>
+                <button @click="showAddModal = false" class="text-gray-500 hover:text-gray-700">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <form method="POST" action="/admin/mlm/rutbe/ekle" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Rütbe Adı</label>
+                        <input type="text" name="ad" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                               placeholder="Örn: Altın Distribütör">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Renk</label>
+                        <select name="renk" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="gray">Gri</option>
+                            <option value="blue">Mavi</option>
+                            <option value="green">Yeşil</option>
+                            <option value="yellow">Sarı</option>
+                            <option value="orange">Turuncu</option>
+                            <option value="red">Kırmızı</option>
+                            <option value="purple">Mor</option>
+                            <option value="pink">Pembe</option>
+                            <option value="indigo">İndigo</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sol Kol PV Gereksinimi</label>
+                        <input type="number" name="sol_pv" value="0" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Sağ Kol PV Gereksinimi</label>
+                        <input type="number" name="sag_pv" value="0" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+
+                <div class="pt-4 flex gap-3">
+                    <button type="submit"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">add_circle</span>
+                        Rütbe Ekle
+                    </button>
+                    <button type="button" @click="showAddModal = false"
+                            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                        İptal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Silme Onay Modal -->
+    <div x-show="deleteConfirm !== null"
+         x-cloak
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+         @click.self="deleteConfirm = null">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span class="material-symbols-outlined text-red-600 text-4xl">warning</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Rütbeyi Sil</h2>
+                <p class="text-gray-600 mb-6">Bu rütbeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.</p>
+
+                <div class="flex gap-3">
+                    <form :action="'/admin/mlm/rutbe/sil/' + deleteConfirm" method="POST" class="flex-1">
+                        <button type="submit"
+                                class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                            Evet, Sil
+                        </button>
+                    </form>
+                    <button type="button" @click="deleteConfirm = null"
+                            class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                        İptal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</body>
+</html>

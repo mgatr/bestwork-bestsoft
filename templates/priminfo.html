@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Breadcrumb & Header -->
+<div class="bg-surface-container-low py-3 px-4 sm:px-6 lg:px-8 border-b border-outline-variant mb-6">
+    <div class="max-w-7xl mx-auto flex items-center text-sm text-on-surface-variant">
+        <a href="/" class="hover:text-primary font-medium">ANASAYFA</a>
+        <span class="mx-2 text-outline">/</span>
+        <span class="text-on-surface font-medium">Prim Bilgileri</span>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <!-- Date Selection -->
+    <form method="get" class="bg-surface-container-low p-6 rounded-xl mb-6 flex flex-wrap items-center gap-4 shadow-sm border border-outline-variant/50">
+        <span class="font-bold text-on-surface text-lg">Tarih Seçiniz:</span>
+        
+        <div class="flex items-center gap-4 flex-1 sm:flex-none">
+            <select name="month" class="bg-surface border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface focus:ring-2 focus:ring-primary focus:outline-none min-w-[140px]">
+                <option value="1" {% if current_month == 1 %}selected{% endif %}>Ocak</option>
+                <option value="2" {% if current_month == 2 %}selected{% endif %}>Şubat</option>
+                <option value="3" {% if current_month == 3 %}selected{% endif %}>Mart</option>
+                <option value="4" {% if current_month == 4 %}selected{% endif %}>Nisan</option>
+                <option value="5" {% if current_month == 5 %}selected{% endif %}>Mayıs</option>
+                <option value="6" {% if current_month == 6 %}selected{% endif %}>Haziran</option>
+                <option value="7" {% if current_month == 7 %}selected{% endif %}>Temmuz</option>
+                <option value="8" {% if current_month == 8 %}selected{% endif %}>Ağustos</option>
+                <option value="9" {% if current_month == 9 %}selected{% endif %}>Eylül</option>
+                <option value="10" {% if current_month == 10 %}selected{% endif %}>Ekim</option>
+                <option value="11" {% if current_month == 11 %}selected{% endif %}>Kasım</option>
+                <option value="12" {% if current_month == 12 %}selected{% endif %}>Aralık</option>
+            </select>
+            
+            <select name="year" class="bg-surface border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface focus:ring-2 focus:ring-primary focus:outline-none min-w-[100px]">
+                {% for y in range(2022, 2027) %}
+                <option value="{{ y }}" {% if current_year == y %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="bg-red-600 text-white px-8 py-2.5 rounded-lg font-bold hover:bg-red-700 transition-colors flex items-center gap-2 shadow-md hover:shadow-lg active:translate-y-0.5 transition-all ml-auto sm:ml-0">
+            GÖNDER
+            <span class="material-symbols-outlined text-sm animate-spin-slow">settings</span>
+        </button>
+    </form>
+
+    <!-- Table -->
+    <div class="bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+        <div class="divide-y divide-outline-variant/50">
+            <!-- SATIŞ KARI -->
+            <div class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+                <span class="font-medium text-on-surface uppercase tracking-wide">SATIŞ KARI:</span>
+                <div class="flex items-center gap-4 sm:gap-12 w-1/2 justify-end">
+                    <span class="text-on-surface font-mono">0,00 CV</span>
+                    <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium w-12 text-right">Detay</a>
+                </div>
+            </div>
+
+            <!-- REFERANS BONUSU -->
+            <div class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+                <span class="font-medium text-on-surface uppercase tracking-wide">REFERANS BONUSU:</span>
+                <div class="flex items-center gap-4 sm:gap-12 w-1/2 justify-end">
+                    <span class="text-on-surface font-mono">0,00 CV</span>
+                    <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium w-12 text-right">Detay</a>
+                </div>
+            </div>
+
+            <!-- HIZLI BAŞLANGIÇ -->
+            <div class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+                <span class="font-medium text-on-surface uppercase tracking-wide">HIZLI BAŞLANGIÇ:</span>
+                <div class="flex items-center gap-4 sm:gap-12 w-1/2 justify-end">
+                    <span class="text-on-surface font-mono">0,00 CV</span>
+                    <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium w-12 text-right">Detay</a>
+                </div>
+            </div>
+
+            <!-- CİRO PRİMİ -->
+            <div class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+                <span class="font-medium text-on-surface uppercase tracking-wide">CİRO PRİMİ:</span>
+                <div class="flex items-center gap-4 sm:gap-12 w-1/2 justify-end">
+                    <span class="text-on-surface font-mono">0,00 CV</span>
+                    <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium w-12 text-right">Detay</a>
+                </div>
+            </div>
+
+            <!-- LİDERLİK PRİMİ -->
+            <div class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container-low transition-colors group">
+                <span class="font-medium text-on-surface uppercase tracking-wide">LİDERLİK PRİMİ:</span>
+                <div class="flex items-center gap-4 sm:gap-12 w-1/2 justify-end">
+                    <span class="text-on-surface font-mono">0,00 CV</span>
+                    <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline text-sm font-medium w-12 text-right">Detay</a>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="flex items-center justify-between p-5 bg-surface-container-low font-bold border-t border-outline-variant">
+                <span class="text-on-surface text-lg">Aylık Toplam</span>
+                <div class="flex items-center gap-4 sm:gap-12 w-1/2 justify-end">
+                    <span class="text-on-surface text-lg font-mono">0,00 CV</span>
+                    <span class="text-on-surface-variant w-12 text-right text-sm font-normal">Pasif</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firma Bilgileri - BestSoft</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex flex-col w-full max-w-[1200px] mx-auto p-4 md:p-6 lg:p-8" x-data="{ showSuccess: {{ 'true' if request.query_params.get('success') == 'true' else 'false' }} }">
+        
+        <!-- Success Notification -->
+        <div x-show="showSuccess" x-transition.opacity.duration.500ms x-init="setTimeout(() => showSuccess = false, 3000)" 
+             class="fixed top-[88px] right-4 md:right-8 bg-green-100 text-green-800 border border-green-200 px-6 py-4 rounded-xl shadow-elevation-2 flex items-center gap-3 z-50">
+            <span class="material-symbols-outlined text-green-600">check_circle</span>
+            <div>
+                <h4 class="font-bold text-sm">Başarılı</h4>
+                <p class="text-xs">Firma bilgileri başarıyla güncellendi.</p>
+            </div>
+            <button @click="showSuccess = false" class="ml-4 hover:bg-green-200 rounded-full p-1">
+                <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+        </div>
+
+        <!-- Header -->
+        <div class="flex items-center gap-4 mb-8">
+            <a href="/admin/ayarlar" class="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-md-onSurfaceVariant">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </a>
+            <h1 class="text-[32px] font-normal text-md-onSurface">Firma Bilgileri</h1>
+        </div>
+
+        <!-- Form Area -->
+        <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex justify-center">
+            <form action="/admin/ayarlar/firma" method="POST" class="max-w-3xl w-full space-y-8">
+                
+                <!-- FOOTER SECTION -->
+                <div class="space-y-6">
+                    <h2 class="text-xl font-medium text-md-primary flex items-center gap-2 border-b border-md-outlineVariant/20 pb-2">
+                        <span class="material-symbols-outlined">vertical_split</span>
+                        Footer (Alt Bilgi) Ayarları
+                    </h2>
+
+                    <!-- Footer Başlığı -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-md-onSurfaceVariant">Footer Başlığı</label>
+                        <div class="relative">
+                            <input type="text" name="footer_baslik" value="{{ ayarlar.footer_baslik if ayarlar.footer_baslik else 'BestWork' }}" 
+                                   class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                   placeholder=" ">
+                            <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                Örn: BestWork
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Footer Açıklama -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-md-onSurfaceVariant">Footer Açıklama Metni</label>
+                        <div class="relative">
+                            <textarea name="footer_aciklama" rows="3"
+                                   class="w-full bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-6 pb-2 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer resize-none"
+                                   placeholder=" ">{{ ayarlar.footer_aciklama if ayarlar.footer_aciklama else '' }}</textarea>
+                            <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                Kısa bir firma tanıtımı...
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Copyright -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-md-onSurfaceVariant">Copyright Metni</label>
+                        <div class="relative">
+                            <input type="text" name="footer_copyright" value="{{ ayarlar.footer_copyright if ayarlar.footer_copyright else '' }}" 
+                                   class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                   placeholder=" ">
+                            <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                Örn: © 2026 BestWork. Tüm hakları saklıdır.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTACT SECTION -->
+                <div class="space-y-6">
+                    <h2 class="text-xl font-medium text-md-primary flex items-center gap-2 border-b border-md-outlineVariant/20 pb-2 pt-4">
+                        <span class="material-symbols-outlined">contact_support</span>
+                        Kurumsal İletişim Bilgileri
+                    </h2>
+
+                    <!-- Adres -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-md-onSurfaceVariant">Açık Adres</label>
+                        <div class="relative">
+                            <textarea name="iletisim_adres" rows="3"
+                                   class="w-full bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-6 pb-2 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer resize-none"
+                                   placeholder=" ">{{ ayarlar.iletisim_adres if ayarlar.iletisim_adres else '' }}</textarea>
+                            <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                Şirket açık adresi...
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Email -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">E-posta Adresi</label>
+                            <div class="relative">
+                                <input type="email" name="iletisim_email" value="{{ ayarlar.iletisim_email if ayarlar.iletisim_email else '' }}" 
+                                       class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                       placeholder=" ">
+                                <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                    Örn: info@bestwork.com
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Telefon -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">Telefon Numarası</label>
+                            <div class="relative">
+                                <input type="text" name="iletisim_telefon" value="{{ ayarlar.iletisim_telefon if ayarlar.iletisim_telefon else '' }}" 
+                                       class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                       placeholder=" ">
+                                <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                    Örn: +90 555 123 45 67
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Harita -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-md-onSurfaceVariant">Google Maps İframe Kodu</label>
+                        <div class="relative">
+                            <textarea name="iletisim_harita" rows="3"
+                                   class="w-full bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-6 pb-2 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer resize-none font-mono text-xs"
+                                   placeholder=" ">{{ ayarlar.iletisim_harita if ayarlar.iletisim_harita else '' }}</textarea>
+                        </div>
+                         <p class="text-[12px] text-md-onSurfaceVariant/70 px-4">Google Haritalar'da "Paylaş > Harita Yerleştir" kısmından alacağınız iframe kodu.</p>
+                    </div>
+                </div>
+
+                <!-- SOCIAL SECTION -->
+                <div class="space-y-6">
+                    <h2 class="text-xl font-medium text-md-primary flex items-center gap-2 border-b border-md-outlineVariant/20 pb-2 pt-4">
+                        <span class="material-symbols-outlined">share</span>
+                        Sosyal Medya Linkleri
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Facebook -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">Facebook</label>
+                            <div class="relative">
+                                <input type="text" name="sosyal_facebook" value="{{ ayarlar.sosyal_facebook if ayarlar.sosyal_facebook else '' }}" 
+                                       class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                       placeholder=" ">
+                                <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                    https://facebook.com/...
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Twitter -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">Twitter (X)</label>
+                            <div class="relative">
+                                <input type="text" name="sosyal_twitter" value="{{ ayarlar.sosyal_twitter if ayarlar.sosyal_twitter else '' }}" 
+                                       class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                       placeholder=" ">
+                                <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                    https://twitter.com/...
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Instagram -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">Instagram</label>
+                            <div class="relative">
+                                <input type="text" name="sosyal_instagram" value="{{ ayarlar.sosyal_instagram if ayarlar.sosyal_instagram else '' }}" 
+                                       class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                       placeholder=" ">
+                                <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                    https://instagram.com/...
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- LinkedIn -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">LinkedIn</label>
+                            <div class="relative">
+                                <input type="text" name="sosyal_linkedin" value="{{ ayarlar.sosyal_linkedin if ayarlar.sosyal_linkedin else '' }}" 
+                                       class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                       placeholder=" ">
+                                <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                    https://linkedin.com/...
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Youtube -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">Youtube</label>
+                            <div class="relative">
+                                <input type="text" name="sosyal_youtube" value="{{ ayarlar.sosyal_youtube if ayarlar.sosyal_youtube else '' }}" 
+                                       class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                       placeholder=" ">
+                                <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                    https://youtube.com/...
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-4 pt-4">
+                    <button type="submit" class="h-10 px-6 rounded-full bg-md-primary text-md-onPrimary font-medium text-sm hover:shadow-md transition-shadow flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">save</span>
+                        Kaydet
+                    </button>
+                    <a href="/bestsoft/dashboard" class="h-10 px-6 rounded-full text-md-primary font-medium text-sm hover:bg-md-primary/10 transition-colors flex items-center justify-center">
+                        İptal
+                    </a>
+                </div>
+
+            </form>
+        </div>
+
+    </main>
+
+</body>
+</html>

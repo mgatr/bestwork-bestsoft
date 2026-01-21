@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Breadcrumb & Header -->
+<div class="bg-surface-container-low py-3 px-4 sm:px-6 lg:px-8 border-b border-outline-variant mb-6">
+    <div class="max-w-7xl mx-auto flex items-center text-sm text-on-surface-variant">
+        <a href="/" class="hover:text-primary font-medium">ANASAYFA</a>
+        <span class="mx-2 text-outline">/</span>
+        <span class="text-on-surface font-medium">REFERANS BONUSU</span>
+    </div>
+</div>
+
+<div class="max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <!-- Filters -->
+    <div class="flex flex-wrap items-center gap-4 mb-6">
+        <!-- Month Select -->
+        <div class="relative">
+            <select name="month" class="appearance-none bg-surface border border-outline-variant text-on-surface rounded-lg py-2.5 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer min-w-[140px]">
+                <option value="1" {% if current_month == 1 %}selected{% endif %}>Ocak</option>
+                <option value="2" {% if current_month == 2 %}selected{% endif %}>Şubat</option>
+                <option value="3" {% if current_month == 3 %}selected{% endif %}>Mart</option>
+                <option value="4" {% if current_month == 4 %}selected{% endif %}>Nisan</option>
+                <option value="5" {% if current_month == 5 %}selected{% endif %}>Mayıs</option>
+                <option value="6" {% if current_month == 6 %}selected{% endif %}>Haziran</option>
+                <option value="7" {% if current_month == 7 %}selected{% endif %}>Temmuz</option>
+                <option value="8" {% if current_month == 8 %}selected{% endif %}>Ağustos</option>
+                <option value="9" {% if current_month == 9 %}selected{% endif %}>Eylül</option>
+                <option value="10" {% if current_month == 10 %}selected{% endif %}>Ekim</option>
+                <option value="11" {% if current_month == 11 %}selected{% endif %}>Kasım</option>
+                <option value="12" {% if current_month == 12 %}selected{% endif %}>Aralık</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+                <span class="material-symbols-outlined text-[20px]">expand_more</span>
+            </div>
+        </div>
+
+        <!-- Year Select -->
+        <div class="relative">
+            <select name="year" class="appearance-none bg-surface border border-outline-variant text-on-surface rounded-lg py-2.5 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer min-w-[100px]">
+                {% for y in range(2024, 2027) %}
+                <option value="{{ y }}" {% if current_year == y %}selected{% endif %}>{{ y }}</option>
+                {% endfor %}
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+                <span class="material-symbols-outlined text-[20px]">expand_more</span>
+            </div>
+        </div>
+
+        <!-- Search Input -->
+        <div class="relative flex-1 max-w-xs">
+            <input type="text" placeholder="Üye Ad Soyad" class="w-full bg-surface border border-outline-variant text-on-surface rounded-lg py-2.5 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-on-surface-variant/50">
+        </div>
+
+        <!-- Action Buttons -->
+        <button class="bg-[#4CAF50] hover:bg-[#43A047] text-white font-medium py-2.5 px-6 rounded-lg transition-colors shadow-sm">
+            Yenile
+        </button>
+        
+        <button class="bg-[#D32F2F] hover:bg-[#C62828] text-white font-medium py-2.5 px-6 rounded-lg transition-colors shadow-sm">
+            Temizle
+        </button>
+    </div>
+
+    <div class="bg-surface rounded-lg shadow-sm border border-outline-variant overflow-hidden">
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-outline-variant">
+                <thead class="bg-surface-container-low">
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider w-10">#</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Üye No</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Ad Soyad</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Tarih</th>
+                        <th scope="col" class="px-4 py-3 text-right text-xs font-bold text-on-surface uppercase tracking-wider">KAZANÇ</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-surface divide-y divide-outline-variant">
+                    {% if kayitlar %}
+                        {% for kayit in kayitlar %}
+                        <tr class="hover:bg-surface-container-lowest transition-colors">
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ loop.index }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-on-surface">{{ kayit.uye_no }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-on-surface">{{ kayit.ad_soyad }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ kayit.tarih.strftime('%d.%m.%Y') }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm font-bold text-on-surface text-right">{{ "{:,.2f}".format(kayit.kazanc) }} CV</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Empty State (Placeholder rows to match design if needed, or just empty message) -->
+                        <!-- Using empty message for now as per standard practice unless specific empty rows requested -->
+                        <tr>
+                            <td colspan="5" class="px-4 py-8 text-center text-sm text-on-surface-variant">
+                                Kayıt bulunamadı.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+                <tfoot class="bg-surface-container-low font-bold">
+                    <tr>
+                        <td colspan="4" class="px-4 py-4 text-right text-sm text-on-surface uppercase tracking-wider">KAZANÇ</td>
+                        <td class="px-4 py-4 text-right text-sm text-on-surface">{{ "{:,.2f}".format(toplam_kazanc) }} CV</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

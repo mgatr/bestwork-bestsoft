@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center px-4 py-16">
+    <div class="text-center max-w-lg mx-auto">
+        <!-- Error Illustration/Icon -->
+        <div class="mb-8 relative inline-flex items-center justify-center w-32 h-32 rounded-full bg-surface-container-high text-primary">
+            <span class="material-symbols-outlined text-[80px]">sentiment_dissatisfied</span>
+            <div class="absolute -bottom-2 -right-2 w-12 h-12 bg-red-100 rounded-full flex items-center justify-center border-4 border-surface">
+                <span class="material-symbols-outlined text-red-600 text-xl font-bold">priority_high</span>
+            </div>
+        </div>
+
+        <!-- Text Content -->
+        <h1 class="text-6xl font-display font-bold text-on-surface mb-2">404</h1>
+        <h2 class="text-2xl font-semibold text-on-surface mb-4">Üzgünüz, aradığınız sayfayı bulamadık.</h2>
+        <p class="text-on-surface-variant mb-8 text-lg">
+            Gitmeye çalıştığınız sayfa silinmiş, adı değiştirilmiş veya geçici olarak servis dışı kalmış olabilir.
+        </p>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/" class="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-primary text-white font-medium transition-all hover:bg-primary-dark hover:shadow-lg hover:-translate-y-0.5 md-elevation-2">
+                <span class="material-symbols-outlined mr-2">home</span>
+                Anasayfaya Dön
+            </a>
+            <button onclick="history.back()" class="inline-flex items-center justify-center px-8 py-3 rounded-xl bg-surface-container-high text-primary font-medium transition-all hover:bg-surface-container-highest hover:shadow-md md-elevation-1">
+                <span class="material-symbols-outlined mr-2">arrow_back</span>
+                Geri Dön
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

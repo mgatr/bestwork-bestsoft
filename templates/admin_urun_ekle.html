@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeni Ürün Ekle - BestSoft Manager</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        // Admin Panel Colors (MD3)
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        },
+                        // Compatibility colors for usage within table/forms (mapped to MD3)
+                        surface: {
+                             DEFAULT: '#FEF7FF',
+                             container: {
+                                 low: '#F3EDF7',
+                                 DEFAULT: '#F3EDF7'
+                             }
+                        },
+                        'on-surface': {
+                            DEFAULT: '#1D1B20',
+                            variant: '#49454F'
+                        },
+                        'on-primary': '#FFFFFF',
+                        primary: {
+                            DEFAULT: '#6750A4',
+                            container: '#EADDFF'
+                        },
+                        'primary-container': '#EADDFF',
+                        'on-primary-container': '#21005D',
+                        error: '#B3261E',
+                        'error-container': '#F9DEDC',
+                        outline: {
+                             DEFAULT: '#79747E',
+                             variant: '#CAC4D0'
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'md3-3': '0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3)',
+                    },
+                    borderRadius: {
+                        'md3-2xl': '24px',
+                        'md3-lg': '16px',
+                        'md3-xl': '20px',
+                        'md3-full': '9999px'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        <div class="mb-8">
+            <span class="inline-block px-4 py-1.5 bg-md-primaryContainer text-md-onPrimaryContainer text-sm font-semibold rounded-full mb-3">⚡ Admin Panel</span>
+            <h1 class="text-4xl font-normal text-md-onSurface mb-2">Yeni Ürün Ekle</h1>
+            <p class="text-lg text-md-onSurfaceVariant">Network marketing için yeni ürün tanımlayın</p>
+        </div>
+
+        <div class="bg-md-surface rounded-[24px] shadow-sm p-8 border border-md-outlineVariant/20">
+            <form action="/admin/urunler" method="post">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="ad" class="block text-sm font-medium text-md-onSurface mb-2">Ürün Adı *</label>
+                        <input type="text" id="ad" name="ad" required class="w-full px-4 py-3 border border-md-outline rounded-xl focus:border-md-primary focus:outline-none transition bg-md-surface text-md-onSurface">
+                    </div>
+                    <div>
+                        <label for="kategori_id" class="block text-sm font-medium text-md-onSurface mb-2">Kategori *</label>
+                        <select id="kategori_id" name="kategori_id" required class="w-full px-4 py-3 border border-md-outline rounded-xl focus:border-md-primary focus:outline-none transition bg-md-surface text-md-onSurface">
+                            <option value="">Kategori seçin</option>
+                            {% for kategori in kategoriler %}
+                            <option value="{{ kategori.id }}">{{ kategori.ad }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label for="aciklama" class="block text-sm font-medium text-md-onSurface mb-2">Açıklama</label>
+                    <textarea id="aciklama" name="aciklama" rows="4" class="w-full px-4 py-3 border border-md-outline rounded-xl focus:border-md-primary focus:outline-none transition bg-md-surface text-md-onSurface"></textarea>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 mt-6">
+                    <div>
+                        <label for="fiyat" class="block text-sm font-medium text-md-onSurface mb-2">Fiyat (₺) *</label>
+                        <input type="number" step="0.01" id="fiyat" name="fiyat" required class="w-full px-4 py-3 border border-md-outline rounded-xl focus:border-md-primary focus:outline-none transition bg-md-surface text-md-onSurface">
+                    </div>
+                    <div>
+                        <label for="indirimli_fiyat" class="block text-sm font-medium text-md-onSurface mb-2">İndirimli Fiyat (₺)</label>
+                        <input type="number" step="0.01" id="indirimli_fiyat" name="indirimli_fiyat" class="w-full px-4 py-3 border border-md-outline rounded-xl focus:border-md-primary focus:outline-none transition bg-md-surface text-md-onSurface">
+                    </div>
+                    <div>
+                        <label for="pv_degeri" class="block text-sm font-medium text-md-onSurface mb-2">PV Değeri *</label>
+                        <input type="number" step="0.01" id="pv_degeri" name="pv_degeri" required class="w-full px-4 py-3 border border-md-outline rounded-xl focus:border-md-primary focus:outline-none transition bg-md-surface text-md-onSurface">
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <label for="resim_url" class="block text-sm font-medium text-md-onSurface mb-2">Resim URL</label>
+                    <input type="url" id="resim_url" name="resim_url" placeholder="https://example.com/image.jpg" class="w-full px-4 py-3 border border-md-outline rounded-xl focus:border-md-primary focus:outline-none transition bg-md-surface text-md-onSurface">
+                    <p class="text-sm text-md-onSurfaceVariant mt-2">Boş bırakılırsa varsayılan görsel kullanılır</p>
+                </div>
+
+                <div class="mt-8 flex items-center justify-end space-x-4">
+                    <a href="/admin/urunler" class="px-6 py-3 border border-md-outline text-md-onSurface font-medium rounded-full hover:bg-md-primary/5 transition">İptal</a>
+                    <button type="submit" class="px-8 py-3 bg-md-primary text-md-onPrimary font-medium rounded-full shadow-sm hover:shadow-md hover:bg-md-primary/90 transition-all transform hover:-translate-y-1">
+                        Ürünü Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

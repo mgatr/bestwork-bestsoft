@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative py-20 bg-surface-container-low overflow-hidden">
+    <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-sm font-bold mb-6">
+            <span class="material-symbols-outlined text-[18px]">contact_support</span>
+            Bize Ulaşın
+        </span>
+        <h1 class="text-4xl md:text-5xl font-display font-bold text-on-surface mb-6">
+            Size Nasıl Yardımcı Olabiliriz?
+        </h1>
+        <p class="text-lg text-on-surface-variant max-w-2xl mx-auto">
+            Sorularınız, önerileriniz veya iş ortaklığı talepleriniz için bizimle iletişime geçin.
+        </p>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+        
+        <!-- Contact Info & Map -->
+        <div class="space-y-12">
+            <!-- Info Cards -->
+            <div class="grid sm:grid-cols-2 gap-6">
+                <div class="bg-surface p-6 rounded-2xl border border-outline-variant/20 hover:shadow-md transition-all duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-2xl">location_on</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-on-surface mb-2">Adresimiz</h3>
+                    <p class="text-on-surface-variant text-sm whitespace-pre-line">
+                        {{ ayarlar.iletisim_adres if ayarlar and ayarlar.iletisim_adres else 'Maslak Mah. Büyükdere Cad.\nNo: 123, Sarıyer\nİstanbul, Türkiye' }}
+                    </p>
+                </div>
+                
+                <div class="bg-surface p-6 rounded-2xl border border-outline-variant/20 hover:shadow-md transition-all duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                        <span class="material-symbols-outlined text-2xl">call</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-on-surface mb-2">İletişim</h3>
+                    <p class="text-on-surface-variant text-sm flex flex-col gap-1">
+                        {% if ayarlar and ayarlar.iletisim_telefon %}
+                            <a href="tel:{{ ayarlar.iletisim_telefon }}" class="hover:text-primary transition-colors">{{ ayarlar.iletisim_telefon }}</a>
+                        {% else %}
+                            <a href="tel:+902121234567" class="hover:text-primary transition-colors">+90 (212) 123 45 67</a>
+                        {% endif %}
+                        
+                        {% if ayarlar and ayarlar.iletisim_email %}
+                            <a href="mailto:{{ ayarlar.iletisim_email }}" class="hover:text-primary transition-colors">{{ ayarlar.iletisim_email }}</a>
+                        {% else %}
+                            <a href="mailto:info@bestwork.com" class="hover:text-primary transition-colors">info@bestwork.com</a>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="bg-surface rounded-3xl overflow-hidden shadow-lg border border-outline-variant/20 h-[400px]">
+                {% if ayarlar and ayarlar.iletisim_harita %}
+                    {{ ayarlar.iletisim_harita | safe }}
+                {% else %}
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3006.637794234567!2d29.0155!3d41.1085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab5d4d4d4d4d5%3A0x4d4d4d4d4d4d4d4d!2sMaslak%2C%20Sariyer%2Fİstanbul!5e0!3m2!1str!2str!4v1620000000000!5m2!1str!2str" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="bg-surface p-8 sm:p-10 rounded-3xl shadow-xl border border-outline-variant/20">
+            <h2 class="text-2xl font-display font-bold text-on-surface mb-6">Bize Yazın</h2>
+            
+            {% if basari_mesaji %}
+            <div class="mb-8 p-4 rounded-xl bg-tertiary-container border border-tertiary/20 flex items-start gap-3">
+                <span class="material-symbols-outlined text-tertiary">check_circle</span>
+                <div>
+                    <h4 class="font-bold text-on-tertiary-container">Mesajınız Gönderildi!</h4>
+                    <p class="text-sm text-on-tertiary-container/80">{{ basari_mesaji }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <form action="/iletisim" method="POST" class="space-y-6">
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="ad_soyad" class="text-sm font-medium text-on-surface">Ad Soyad</label>
+                        <input type="text" id="ad_soyad" name="ad_soyad" required 
+                               class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all"
+                               placeholder="Adınız Soyadınız">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="email" class="text-sm font-medium text-on-surface">E-posta</label>
+                        <input type="email" id="email" name="email" required 
+                               class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all"
+                               placeholder="ornek@email.com">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label for="konu" class="text-sm font-medium text-on-surface">Konu</label>
+                    <select id="konu" name="konu" required 
+                            class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all">
+                        <option value="" disabled selected>Seçiniz</option>
+                        <option value="Genel Bilgi">Genel Bilgi</option>
+                        <option value="Sipariş Destek">Sipariş Destek</option>
+                        <option value="İş Ortaklığı">İş Ortaklığı</option>
+                        <option value="Teknik Sorun">Teknik Sorun</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                </div>
+
+                <div class="space-y-2">
+                    <label for="mesaj" class="text-sm font-medium text-on-surface">Mesajınız</label>
+                    <textarea id="mesaj" name="mesaj" rows="5" required 
+                              class="w-full bg-surface-container-high border-none rounded-xl px-4 py-3 text-on-surface focus:ring-2 focus:ring-primary/20 transition-all resize-none"
+                              placeholder="Mesajınızı buraya yazın..."></textarea>
+                </div>
+
+                <button type="submit" class="w-full btn-filled py-4 text-lg shadow-md3-2 hover:shadow-md3-3 group">
+                    Gönder
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">send</span>
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

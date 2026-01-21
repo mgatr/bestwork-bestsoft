@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Breadcrumb & Header -->
+<div class="bg-surface-container-low py-3 px-4 sm:px-6 lg:px-8 border-b border-outline-variant mb-6">
+    <div class="max-w-7xl mx-auto flex items-center text-sm text-on-surface-variant">
+        <a href="/" class="hover:text-primary font-medium">ANASAYFA</a>
+        <span class="mx-2 text-outline">/</span>
+        <span class="text-on-surface font-medium">HIZLI BAŞLANGIÇ BONUSU</span>
+    </div>
+</div>
+
+<div class="max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div class="bg-surface rounded-lg shadow-sm border border-outline-variant overflow-hidden">
+        
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-outline-variant">
+                <thead class="bg-surface-container-low">
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider w-10">#</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Üye No</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Ad Soyad</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Paket Adı</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Bonus</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Paket Alım Tarihi</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Asıl Paket Tarihi</th>
+                        <th scope="col" class="px-4 py-3 text-right text-xs font-bold text-on-surface uppercase tracking-wider">KAZANÇ</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-surface divide-y divide-outline-variant">
+                    {% if kayitlar %}
+                        {% for kayit in kayitlar %}
+                        <tr class="hover:bg-surface-container-lowest transition-colors">
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ loop.index }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-on-surface">{{ kayit.uye_no }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-on-surface">{{ kayit.ad_soyad }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-on-surface">{{ kayit.paket_adi }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-on-surface">{{ "{:,.2f}".format(kayit.bonus) }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-on-surface-variant">{{ kayit.tarih.strftime('%d.%m.%Y') }}</td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-on-surface-variant"></td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm font-bold text-on-surface text-right">{{ "{:,.2f}".format(kayit.kazanc) }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="px-4 py-8 text-center text-sm text-on-surface-variant">
+                                Kayıt bulunamadı.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+                <tfoot class="bg-surface-container-low font-bold">
+                    <tr>
+                        <td colspan="7" class="px-4 py-4 text-right text-sm text-on-surface">Toplam</td>
+                        <td class="px-4 py-4 text-right text-sm text-on-surface">{{ "{:,.2f}".format(toplam_kazanc) }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

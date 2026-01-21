@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeni Ürün Ekle - BestSoft</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                            error: '#B3261E',
+                            onError: '#FFFFFF'
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex flex-col w-full max-w-[1200px] mx-auto p-4 md:p-6 lg:p-8">
+        
+        <!-- Header -->
+        <div class="flex items-center gap-4 mb-8">
+            <a href="/admin/products" class="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-md-onSurfaceVariant">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </a>
+            <h1 class="text-[32px] font-normal text-md-onSurface">Yeni Ürün Ekle</h1>
+        </div>
+
+        <form action="/admin/products/add" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Column (Main Info) -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- General Info Card -->
+                <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm">
+                    <h2 class="text-xl font-medium text-md-onSurface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-md-primary">info</span>
+                        Temel Bilgiler
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Ürün Adı -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">Ürün Adı *</label>
+                            <div class="relative">
+                                <input type="text" name="ad" required 
+                                    class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors peer"
+                                    placeholder=" ">
+                                <span class="absolute left-4 top-4 text-md-onSurfaceVariant/50 pointer-events-none transition-all peer-focus:text-[11px] peer-focus:-translate-y-3 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:-translate-y-3">
+                                    Örn: Vitamin C Kapsül
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Kategori & Marka Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-1">
+                                <label class="text-sm font-medium text-md-onSurfaceVariant">Kategori *</label>
+                                <div class="relative">
+                                    <select name="kategori_id" required class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors appearance-none">
+                                        <option value="">Seçiniz</option>
+                                        {% for cat in categories %}
+                                        <option value="{{ cat.id }}">{{ cat.ad }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <span class="absolute right-4 top-4 pointer-events-none text-md-onSurfaceVariant">
+                                        <span class="material-symbols-outlined">expand_more</span>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col gap-1">
+                                <label class="text-sm font-medium text-md-onSurfaceVariant">Marka</label>
+                                <div class="relative">
+                                    <select name="marka_id" class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 pt-4 pb-1 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors appearance-none">
+                                        <option value="">Seçiniz</option>
+                                        {% for brand in brands %}
+                                        <option value="{{ brand.id }}">{{ brand.ad }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <span class="absolute right-4 top-4 pointer-events-none text-md-onSurfaceVariant">
+                                        <span class="material-symbols-outlined">expand_more</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Açıklama -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">Detaylı Açıklama</label>
+                            <textarea name="aciklama" rows="4" 
+                                class="w-full bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 py-4 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors text-sm"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Card -->
+                <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm">
+                    <h2 class="text-xl font-medium text-md-onSurface mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-700">payments</span>
+                        Fiyatlandırma & Network
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Fiyat -->
+                        <div class="flex flex-col gap-1">
+                            <label class="text-sm font-medium text-md-onSurfaceVariant">Satış Fiyatı (TL) *</label>
+                            <input type="number" step="0.01" name="fiyat" required 
+                                class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 text-lg font-medium text-md-onSurface focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none">
+                        </div>
+
+                        <div class="flex flex-col gap-1">
+                             <label class="text-sm font-medium text-md-onSurfaceVariant">KDV Oranı</label>
+                             <div class="relative">
+                                <select name="kdv_orani" class="w-full h-14 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 appearance-none">
+                                    <option value="20">%20</option>
+                                    <option value="10">%10</option>
+                                    <option value="1">%1</option>
+                                    <option value="0">%0</option>
+                                </select>
+                                <span class="absolute right-4 top-4 pointer-events-none">
+                                    <span class="material-symbols-outlined">expand_more</span>
+                                </span>
+                             </div>
+                        </div>
+
+                        <!-- PV / CV -->
+                        <div class="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                             <label class="block text-sm font-bold text-indigo-700 mb-1">PV (Kariyer Puanı)</label>
+                             <input type="number" name="pv_degeri" value="0" class="w-full bg-white border border-indigo-200 rounded px-3 py-2 text-indigo-900 font-medium focus:ring-2 focus:ring-indigo-500 outline-none">
+                             <p class="text-[11px] text-indigo-600/70 mt-1">Sıralama ve kariyer için kullanılır.</p>
+                        </div>
+
+                        <div class="bg-orange-50/50 p-4 rounded-xl border border-orange-100">
+                             <label class="block text-sm font-bold text-orange-700 mb-1">CV (Prim Değeri)</label>
+                             <input type="number" step="0.01" name="cv_degeri" value="0" class="w-full bg-white border border-orange-200 rounded px-3 py-2 text-orange-900 font-medium focus:ring-2 focus:ring-orange-500 outline-none">
+                             <p class="text-[11px] text-orange-600/70 mt-1">Komisyon hesaplamasında kullanılır.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+             <!-- Right Column (Sidebar) -->
+             <div class="space-y-6">
+                 
+                <!-- Image Upload -->
+                <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 shadow-sm">
+                    <h3 class="font-medium text-md-onSurface mb-4">Ürün Görseli</h3>
+                    <div class="aspect-square bg-md-surfaceDim/30 rounded-xl border-2 border-dashed border-md-outlineVariant flex flex-col items-center justify-center relative cursor-pointer hover:bg-md-surfaceDim/50 transition-colors">
+                        <input type="file" name="resim" class="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full">
+                        <span class="material-symbols-outlined text-[40px] text-md-outline">add_photo_alternate</span>
+                        <span class="text-xs text-md-outline mt-2">Görsel Seç</span>
+                    </div>
+                </div>
+
+                <!-- Stock Info -->
+                <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 shadow-sm space-y-4">
+                    <h3 class="font-medium text-md-onSurface">Stok Yönetimi</h3>
+                    
+                    <div>
+                        <label class="text-xs font-medium text-md-onSurfaceVariant">Stok Kodu (SKU)</label>
+                        <input type="text" name="sku" class="w-full h-10 mt-1 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-3 text-sm focus:border-md-primary outline-none">
+                    </div>
+                    
+                    <div>
+                         <label class="text-xs font-medium text-md-onSurfaceVariant">Barkod</label>
+                         <input type="text" name="barkod" class="w-full h-10 mt-1 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-3 text-sm focus:border-md-primary outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                             <label class="text-xs font-medium text-md-onSurfaceVariant">Stok Adedi</label>
+                             <input type="number" name="stok" value="0" class="w-full h-10 mt-1 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-3 text-sm focus:border-md-primary outline-none">
+                        </div>
+                        <div>
+                             <label class="text-xs font-medium text-md-error">Kritik Sınır</label>
+                             <input type="number" name="kritik_stok" value="5" class="w-full h-10 mt-1 bg-red-50 border border-red-200 rounded-[4px] px-3 text-sm text-red-700 focus:border-red-500 outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Actions -->
+                <div class="flex flex-col gap-3">
+                    <button type="submit" class="h-12 w-full rounded-full bg-md-primary text-md-onPrimary font-medium text-sm hover:shadow-md transition-shadow flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">save</span>
+                        Ürünü Kaydet
+                    </button>
+                    <a href="/admin/products" class="h-12 w-full rounded-full bg-transparent border border-md-outlineVariant text-md-primary font-medium text-sm hover:bg-md-surfaceDim/50 transition-colors flex items-center justify-center">
+                        İptal Et
+                    </a>
+                </div>
+
+             </div>
+
+        </form>
+
+    </main>
+
+</body>
+</html>

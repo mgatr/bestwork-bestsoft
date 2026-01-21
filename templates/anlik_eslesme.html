@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Özel Eşleşme Sayfası Tasarımı (Amazon Inspired) -->
+<div class="relative overflow-hidden bg-white min-h-[calc(100vh-64px)]">
+    <!-- Background Decor (Optional) -->
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-surface-container-low skew-x-12 translate-x-32 opacity-50 pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            <!-- Sol Taraf: Büyük Başlık ve CTA -->
+            <div class="space-y-10 animate-fade-in-up text-center lg:text-left">
+                <div>
+                    <h1 class="text-6xl md:text-7xl font-display font-extrabold text-slate-900 leading-[0.9] tracking-tight mb-4">
+                        Performans <br>
+                        <span class="text-[#FF9900]">Eşleşmesi</span>
+                    </h1>
+                    <p class="text-2xl text-slate-600 font-medium max-w-lg mx-auto lg:mx-0">
+                        Binary sistemindeki dengenizi koruyun, kazancınızı katlayın.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                    <a href="/prim-bilgileri" class="px-10 py-5 bg-[#FF9900] hover:bg-[#e68a00] text-white text-lg font-bold rounded-full transition-all hover:scale-105 shadow-xl shadow-orange-500/20 flex items-center gap-2">
+                        <span>Kazanç Geçmişi</span>
+                        <span class="material-symbols-outlined font-bold">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="pt-6 border-t border-slate-100 max-w-md mx-auto lg:mx-0">
+                    <p class="text-slate-900 font-bold mb-2">Hemen şimdi kontrol edin!</p>
+                    <p class="text-sm text-slate-500">
+                        Sol ve sağ kollarınızdaki puanlar her gece 00:00'da kontrol edilir ve kısa kol üzerinden <strong>%13</strong> bonus hesabınıza yatırılır.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Sağ Taraf: Kart (Floating Card) -->
+            <div class="relative animate-fade-in-up delay-100 perspective-1000">
+                <!-- Kart -->
+                <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform hover:-translate-y-2 transition-all duration-500 max-w-md mx-auto w-full">
+                    <!-- Header -->
+                    <div class="bg-[#232f3e] px-6 py-5 flex items-center justify-between text-white">
+                        <span class="font-bold tracking-wide flex items-center gap-2">
+                            <span class="material-symbols-outlined text-amber-400">stars</span>
+                            Mevcut Durum
+                        </span>
+                        <span class="text-xs bg-white/20 px-2 py-1 rounded text-white/90">Canlı Veri</span>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="p-8">
+                        <div class="space-y-6">
+                            <!-- Image/Illustration Area -->
+                            <div class="rounded-xl bg-orange-50 border border-orange-100 p-4 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-[#FF9900] flex items-center justify-center text-white shadow-lg mx-auto sm:mx-0">
+                                    <span class="material-symbols-outlined text-2xl">percent</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900 leading-tight">
+                                        %13 Kazanç Fırsatı
+                                    </h3>
+                                    <p class="text-xs text-slate-600 mt-1">
+                                        Kısa kolunuzdaki puan kadar eşleşme sağlanır.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Stats Grid -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-1">SOL KOL</span>
+                                    <span class="text-2xl font-black text-slate-900">{{ "{:,.0f}".format(sol_pv) }}</span>
+                                    <span class="text-[10px] text-slate-400">PV</span>
+                                </div>
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-1">SAĞ KOL</span>
+                                    <span class="text-2xl font-black text-slate-900">{{ "{:,.0f}".format(sag_pv) }}</span>
+                                    <span class="text-[10px] text-slate-400">PV</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Calculation Line -->
+                            <div class="relative py-4">
+                                <div class="absolute inset-0 flex items-center">
+                                    <div class="w-full border-t border-slate-200 border-dashed"></div>
+                                </div>
+                                <div class="relative flex justify-center">
+                                    <span class="bg-white px-2 text-sm text-slate-500 font-medium">Potansiyel Kazanç</span>
+                                </div>
+                            </div>
+
+                            <!-- Total Potential -->
+                            <div class="flex items-center justify-between bg-emerald-50 p-5 rounded-xl border border-emerald-100">
+                                <div class="flex flex-col">
+                                    <span class="text-xs text-emerald-700 font-bold uppercase">Tahmini Ödeme</span>
+                                    <span class="text-[10px] text-emerald-600/70">Bir sonraki hesaplamada</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-2xl font-black text-emerald-700">{{ "{:,.2f}".format(olasi_kazanc) }} CV</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Bottom Link -->
+                            <a href="/panel/agac/{{ user.id }}" class="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-slate-600 hover:text-[#FF9900] hover:bg-slate-50 rounded-lg transition-colors mt-2">
+                                <span>Ağaç Görünümü</span>
+                                <span class="material-symbols-outlined text-[18px]">account_tree</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

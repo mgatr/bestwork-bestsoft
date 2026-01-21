@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayarlar - BestSoft</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-[32px] md:text-[36px] font-normal text-md-onSurface">Ayarlar</h1>
+        </div>
+
+        <!-- Content Area -->
+        <div class="grid grid-cols-1 gap-6">
+            <!-- Site Yönetimi Modülü -->
+            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                 
+                 <!-- Module Badge -->
+                 <div class="absolute top-0 right-0 bg-md-primaryContainer text-md-onPrimaryContainer text-[10px] font-bold tracking-wider px-4 py-2 rounded-bl-2xl">
+                     MODÜL 1
+                 </div>
+
+                 <div class="w-20 h-20 shrink-0 bg-md-secondaryContainer text-md-onSecondaryContainer rounded-[24px] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[40px]">admin_panel_settings</span>
+                 </div>
+
+                 <div class="flex-1 w-full">
+                     <h3 class="text-[24px] font-normal text-md-onSurface mb-2">Site Yönetimi Modülü</h3>
+
+                     <!-- Action Buttons for Module Features -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <a href="/admin/ayarlar/seo" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-md-primaryContainer/30 text-md-primary flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">search</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">SEO Ayarları</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Arama motoru optimizasyonu</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/ayarlar/analytics" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">analytics</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Google Analytics</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Ziyaretçi istatistikleri</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/ayarlar/firma" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">business</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Firma Bilgileri</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">K.Kimlik ve iletişim</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/ayarlar/slider" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">view_carousel</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Slider Yönetimi</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Hero banner kontrolü</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/ayarlar/sertifika" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">workspace_premium</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Sertifika Yönetimi</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Belge düzenleme</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/ayarlar/guncelleme" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group relative">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">system_update</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Sistem Güncelle</span>
+                                {% if update_available %}
+                                    <span class="text-[12px] font-bold text-red-600 animate-pulse truncate">GÜNCELLEME MEVCUT</span>
+                                {% else %}
+                                    <span class="text-[12px] font-mono text-md-onSurfaceVariant truncate">{{ current_version }}</span>
+                                {% endif %}
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+                     </div>
+                 </div>
+            </div>
+
+            <!-- Formlar Modülü (Yeni) -->
+            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                 
+                 <!-- Module Badge -->
+                 <div class="absolute top-0 right-0 bg-md-primaryContainer text-md-onPrimaryContainer text-[10px] font-bold tracking-wider px-4 py-2 rounded-bl-2xl">
+                     MODÜL 2
+                 </div>
+
+                 <div class="w-20 h-20 shrink-0 bg-md-tertiaryContainer text-md-onTertiaryContainer rounded-[24px] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[40px]">description</span>
+                 </div>
+
+                 <div class="flex-1 w-full">
+                     <h3 class="text-[24px] font-normal text-md-onSurface mb-2">Formlar Modülü</h3>
+                     
+                     <!-- Action Buttons for Module Features -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        
+                        <!-- İletişim Formları -->
+                        <a href="/admin/iletisim" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">mail</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">İletişim Formları</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Gelen mesajlar</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+                     </div>
+                 </div>
+            </div>
+
+            <!-- Ürünler Modülü (Modül 3) -->
+            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                 
+                 <!-- Module Badge -->
+                 <div class="absolute top-0 right-0 bg-md-primaryContainer text-md-onPrimaryContainer text-[10px] font-bold tracking-wider px-4 py-2 rounded-bl-2xl">
+                     MODÜL 3
+                 </div>
+
+                 <div class="w-20 h-20 shrink-0 bg-indigo-100 text-indigo-700 rounded-[24px] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[40px]">inventory_2</span>
+                 </div>
+
+                 <div class="flex-1 w-full">
+                     <h3 class="text-[24px] font-normal text-md-onSurface mb-2">Ürünler Modülü</h3>
+                     <p class="text-md-onSurfaceVariant mb-6 text-sm">Ürünleri, stokları, kategorileri ve satış fiyatlarını yönetin. Excel ile toplu işlem yapabilirsiniz.</p>
+
+                     <!-- Action Buttons for Module Features -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        
+                        <a href="/admin/products" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">dashboard</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Genel Bakış</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Modül paneli</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/products/add" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">add_circle</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Yeni Ürün Ekle</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Gelişmiş ürün formu</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/products/categories" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">category</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Kategoriler</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Ürün kategorileri</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                         <a href="/admin/products/brands" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">branding_watermark</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Markalar</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Tedarikçi markaları</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+                     </div>
+                 </div>
+            </div>
+
+            <!-- Network Marketing Modülü (Modül 4) -->
+            <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm flex flex-col md:flex-row gap-8 items-start relative overflow-hidden">
+                 
+                 <!-- Module Badge -->
+                 <div class="absolute top-0 right-0 bg-amber-100 text-amber-900 text-[10px] font-bold tracking-wider px-4 py-2 rounded-bl-2xl">
+                     MODÜL 4
+                 </div>
+
+                 <div class="w-20 h-20 shrink-0 bg-emerald-100 text-emerald-700 rounded-[24px] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[40px]">account_tree</span>
+                 </div>
+
+                 <div class="flex-1 w-full">
+                     <h3 class="text-[24px] font-normal text-md-onSurface mb-2">Network Marketing Modülü</h3>
+                     <p class="text-md-onSurfaceVariant mb-6 text-sm">Komisyon oranları, nesil gelirleri, bonus ayarları ve MLM ağaç yapısını yönetin.</p>
+
+                     <!-- Action Buttons for Module Features -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        
+                        <a href="/admin/mlm/ayarlar" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">settings</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">MLM Ayarları</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Genel sistem ayarları</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/mlm/komisyon" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">payments</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Komisyon Oranları</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Eşleşme ve kısa kol</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/mlm/nesil" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">family_restroom</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Nesil Gelirleri</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">1-10. nesil oranları</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/mlm/bonus" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">card_giftcard</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Bonus Sistemleri</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Referans ve hoşgeldin</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/mlm/rutbe" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">military_tech</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Rütbe Sistemi</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Kariyer basamakları</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+
+                        <a href="/admin/mlm/agac" class="h-auto py-3 bg-md-surface border border-md-outlineVariant/50 rounded-xl flex items-center px-4 gap-3 hover:bg-black/5 transition-colors text-left group">
+                            <div class="w-10 h-10 shrink-0 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center">
+                                <span class="material-symbols-outlined group-hover:scale-110 transition-transform">account_tree</span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-[15px] font-medium text-md-onSurface truncate">Ağaç Görünümü</span>
+                                <span class="text-[12px] text-md-onSurfaceVariant truncate">Binary tree yapısı</span>
+                            </div>
+                            <span class="material-symbols-outlined ml-auto text-md-outlineVariant">chevron_right</span>
+                        </a>
+                     </div>
+                 </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

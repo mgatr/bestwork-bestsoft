@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-surface py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-surface-container p-10 rounded-xl shadow-md3-2 border border-outline-variant/20">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-on-surface">
+                Hesabınıza Giriş Yapın
+            </h2>
+            <p class="mt-2 text-center text-sm text-on-surface-variant">
+                Veya
+                <a href="/kayit" class="font-medium text-primary hover:text-primary/80 transition-colors">
+                    yeni bir hesap oluşturun
+                </a>
+            </p>
+        </div>
+        
+        {% if basari %}
+        <div class="bg-tertiary-container border border-tertiary text-on-tertiary-container px-4 py-3 rounded-md3-sm relative mb-4" role="alert">
+            <span class="block sm:inline">{{ basari }}</span>
+        </div>
+        {% endif %}
+
+        {% if hata %}
+        <div class="bg-error-container border border-error text-on-error-container px-4 py-3 rounded-md3-sm relative" role="alert">
+            <span class="block sm:inline">{{ hata }}</span>
+        </div>
+        {% endif %}
+
+        <form class="mt-8 space-y-6" action="/giris" method="POST">
+            <div class="rounded-md shadow-sm -space-y-px">
+                <div>
+                    <label for="email" class="sr-only">Email veya Üye No</label>
+                    <input id="email" name="email" type="text" autocomplete="username" required 
+                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface bg-surface rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm transition-colors" 
+                        placeholder="Email Adresi veya Üye No">
+                </div>
+                <div>
+                    <label for="password" class="sr-only">Şifre</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required 
+                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-outline-variant placeholder-on-surface-variant/50 text-on-surface bg-surface rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm transition-colors" 
+                        placeholder="Şifre">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-primary focus:ring-primary border-outline rounded bg-surface">
+                    <label for="remember_me" class="ml-2 block text-sm text-on-surface">
+                        Beni Hatırla
+                    </label>
+                </div>
+
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-primary hover:text-primary/80 transition-colors">
+                        Şifremi Unuttum?
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-md3-1 hover:shadow-md3-2 transition-all">
+                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <!-- Heroicon name: solid/lock-closed -->
+                        <svg class="h-5 w-5 text-on-primary/70 group-hover:text-on-primary transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                    Giriş Yap
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

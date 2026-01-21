@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marka Yönetimi - BestSoft Manager</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                            error: '#B3261E',
+                            onError: '#FFFFFF',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1200px] mx-auto p-4 md:p-6 lg:p-8">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <a href="/admin/products" class="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-md-onSurfaceVariant">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <h1 class="text-[32px] font-normal text-md-onSurface">Marka Yönetimi</h1>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Left: Add Brand Form -->
+            <div class="md:col-span-1">
+                <div class="bg-md-surface rounded-[24px] border border-md-outlineVariant/20 shadow-sm p-6 sticky top-6">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="w-10 h-10 rounded-full bg-md-secondaryContainer flex items-center justify-center text-md-onSecondaryContainer">
+                             <span class="material-symbols-outlined">branding_watermark</span>
+                        </span>
+                        <h2 class="text-xl font-normal text-md-onSurface">Yeni Marka</h2>
+                    </div>
+                    
+                    <form action="/admin/products/brands/add" method="POST" class="space-y-6">
+                        
+                        <!-- Name Input -->
+                        <div class="relative group">
+                            <input type="text" id="ad" name="ad" required 
+                                class="peer w-full h-[56px] px-4 pt-4 bg-md-surfaceDim/50 border-b border-md-outlineVariant rounded-t-lg focus:border-md-primary focus:border-b-2 focus:outline-none transition-colors placeholder-transparent text-md-onSurface"
+                                placeholder=" ">
+                            <label for="ad" 
+                                class="absolute left-4 top-2 text-xs text-md-primary transition-all 
+                                peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-md-onSurfaceVariant 
+                                peer-focus:top-2 peer-focus:text-xs peer-focus:text-md-primary">
+                                Marka Adı *
+                            </label>
+                        </div>
+
+                        <button type="submit" class="w-full h-10 rounded-full bg-md-primary text-md-onPrimary font-medium text-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">save</span>
+                            Markayı Kaydet
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right: Brand List -->
+            <div class="md:col-span-2 space-y-6">
+                 <div class="bg-md-surface rounded-[24px] border border-md-outlineVariant/20 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-md-outlineVariant/20 bg-md-surfaceDim/30">
+                        <h2 class="text-lg font-medium text-md-onSurface">Kayıtlı Markalar</h2>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-md-surfaceDim/30 border-b border-md-outlineVariant/20 text-xs font-medium text-md-onSurfaceVariant uppercase tracking-wider">
+                                    <th class="px-6 py-4">ID</th>
+                                    <th class="px-6 py-4">Marka Adı</th>
+                                    <th class="px-6 py-4 text-right">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-md-outlineVariant/10">
+                                {% for brand in brands %}
+                                <tr class="hover:bg-md-surfaceDim/30 transition-colors">
+                                    <td class="px-6 py-4 text-sm text-md-onSurfaceVariant">#{{ brand.id }}</td>
+                                    <td class="px-6 py-4 font-medium text-md-onSurface">{{ brand.ad }}</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="w-8 h-8 rounded-full hover:bg-md-error/10 flex items-center justify-center text-md-error transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">delete</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                                {% if not brands %}
+                                <tr>
+                                    <td colspan="3" class="px-6 py-12 text-center">
+                                        <div class="w-16 h-16 bg-md-surfaceDim/50 rounded-full flex items-center justify-center mx-auto mb-3 text-md-onSurfaceVariant/50">
+                                            <span class="material-symbols-outlined text-3xl">branding_watermark</span>
+                                        </div>
+                                        <h3 class="text-md font-medium text-md-onSurface">Marka Yok</h3>
+                                        <p class="text-sm text-md-onSurfaceVariant mt-1">Henüz hiç marka tanımlanmamış.</p>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+</body>
+</html>

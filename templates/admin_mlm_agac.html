@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Ağaç Görünümü - BestSoft</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <a href="/admin/ayarlar" class="text-blue-600 hover:underline mb-2 inline-block">← Ayarlara Dön</a>
+            <h1 class="text-4xl font-bold text-gray-900">Binary Ağaç Yapısı</h1>
+            <p class="text-gray-600 mt-2">Tüm network üyelerinin ağaç görünümü</p>
+        </div>
+
+        <!-- İstatistikler -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined">groups</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Toplam Üye</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ toplam_uye }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined">account_tree</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Root Kullanıcı</p>
+                        <p class="text-2xl font-bold text-gray-900">{{ root_users|length }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined">trending_up</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Aktif Üye</p>
+                        <p class="text-2xl font-bold text-gray-900">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined">sync</span>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Toplam PV</p>
+                        <p class="text-2xl font-bold text-gray-900">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Root Users List -->
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined">account_tree</span>
+                Ağaç Kökü (Root Kullanıcılar)
+            </h2>
+
+            {% if root_users %}
+            <div class="space-y-4">
+                {% for user in root_users %}
+                <div class="border border-gray-200 rounded-xl p-6 hover:border-blue-400 transition-colors">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white flex items-center justify-center font-bold text-lg">
+                                    {{ user.tam_ad[0] }}
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900">{{ user.tam_ad }}</h3>
+                                    <p class="text-sm text-gray-600">Üye No: {{ user.uye_no }}</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                                <div class="bg-blue-50 p-3 rounded-lg">
+                                    <p class="text-xs text-gray-600 mb-1">Sol PV</p>
+                                    <p class="text-lg font-bold text-blue-600">{{ user.sol_pv or 0 }}</p>
+                                </div>
+                                <div class="bg-green-50 p-3 rounded-lg">
+                                    <p class="text-xs text-gray-600 mb-1">Sağ PV</p>
+                                    <p class="text-lg font-bold text-green-600">{{ user.sag_pv or 0 }}</p>
+                                </div>
+                                <div class="bg-purple-50 p-3 rounded-lg">
+                                    <p class="text-xs text-gray-600 mb-1">Toplam CV</p>
+                                    <p class="text-lg font-bold text-purple-600">{{ user.toplam_cv or 0 }}</p>
+                                </div>
+                                <div class="bg-amber-50 p-3 rounded-lg">
+                                    <p class="text-xs text-gray-600 mb-1">Rütbe</p>
+                                    <p class="text-sm font-bold text-amber-600">{{ user.rutbe or 'Yok' }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ml-4">
+                            <a href="/agac/{{ user.id }}"
+                               class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                                <span class="material-symbols-outlined text-sm">visibility</span>
+                                Ağacı Görüntüle
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-12">
+                <span class="material-symbols-outlined text-gray-300 text-6xl">account_tree</span>
+                <p class="text-gray-500 mt-4">Henüz root kullanıcı bulunmuyor</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Bilgilendirme -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
+            <h3 class="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                <span class="material-symbols-outlined">info</span>
+                Ağaç Görünümü Hakkında
+            </h3>
+            <ul class="text-sm text-blue-800 space-y-2">
+                <li>• <strong>Root Kullanıcılar:</strong> Parent_id değeri NULL olan (ağacın en üstündeki) kullanıcılardır</li>
+                <li>• Her kullanıcının detaylı ağacını görmek için "Ağacı Görüntüle" butonuna tıklayın</li>
+                <li>• Binary sistem: Her kullanıcının maksimum 2 alt kolu (sol/sağ) vardır</li>
+                <li>• PV (Point Value): Kullanıcının kollarında biriken puanlardır</li>
+            </ul>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ürün Yönetimi - BestSoft</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex flex-col w-full max-w-[1200px] mx-auto p-4 md:p-6 lg:p-8">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <a href="/bestsoft/dashboard" class="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-md-onSurfaceVariant">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <div>
+                     <span class="text-sm font-medium text-md-primary">Modül 3</span>
+                     <h1 class="text-[32px] font-normal text-md-onSurface leading-tight">Ürün Yönetimi</h1>
+                </div>
+            </div>
+            
+            <a href="/admin/products/add" class="h-10 px-6 rounded-full bg-md-primary text-md-onPrimary font-medium text-sm hover:shadow-md transition-shadow flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Yeni Ürün
+            </a>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <!-- Card 1 -->
+            <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 relative group hover:shadow-elevation-1 transition-shadow">
+                <div class="flex flex-col h-full">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-[16px] bg-md-primaryContainer text-md-onPrimaryContainer flex items-center justify-center">
+                            <span class="material-symbols-outlined">inventory_2</span>
+                        </div>
+                        <span class="text-[32px] font-normal text-md-onSurface">{{ stats.products }}</span>
+                    </div>
+                    <div>
+                        <h3 class="text-md font-medium text-md-onSurface">Toplam Ürün</h3>
+                        <p class="text-xs text-md-onSurfaceVariant">Katalogdaki aktif ürünler</p>
+                    </div>
+                </div>
+                <a href="/admin/products/list" class="absolute inset-0 rounded-[24px]"></a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 relative group hover:shadow-elevation-1 transition-shadow">
+                <div class="flex flex-col h-full">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-[16px] bg-md-secondaryContainer text-md-onSecondaryContainer flex items-center justify-center">
+                            <span class="material-symbols-outlined">category</span>
+                        </div>
+                        <span class="text-[32px] font-normal text-md-onSurface">{{ stats.categories }}</span>
+                    </div>
+                    <div>
+                        <h3 class="text-md font-medium text-md-onSurface">Kategoriler</h3>
+                        <p class="text-xs text-md-onSurfaceVariant">Ürün grupları</p>
+                    </div>
+                </div>
+                <a href="/admin/products/categories" class="absolute inset-0 rounded-[24px]"></a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 relative group hover:shadow-elevation-1 transition-shadow">
+                 <div class="flex flex-col h-full">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-[16px] bg-md-tertiaryContainer text-md-onTertiaryContainer flex items-center justify-center">
+                            <span class="material-symbols-outlined">branding_watermark</span>
+                        </div>
+                        <span class="text-[32px] font-normal text-md-onSurface">{{ stats.brands }}</span>
+                    </div>
+                    <div>
+                        <h3 class="text-md font-medium text-md-onSurface">Markalar</h3>
+                        <p class="text-xs text-md-onSurfaceVariant">Tedarikçi markalar</p>
+                    </div>
+                </div>
+                <a href="/admin/products/brands" class="absolute inset-0 rounded-[24px]"></a>
+            </div>
+
+             <!-- Card 4 -->
+             <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 relative group hover:shadow-elevation-1 transition-shadow">
+                 <div class="flex flex-col h-full">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 rounded-[16px] bg-[#FFDAD6] text-[#410002] flex items-center justify-center">
+                            <span class="material-symbols-outlined">warning</span>
+                        </div>
+                        <span class="text-[32px] font-normal text-md-onSurface">{{ stats.low_stock }}</span>
+                    </div>
+                    <div>
+                        <h3 class="text-md font-medium text-md-onSurface">Kritik Stok</h3>
+                        <p class="text-xs text-md-onSurfaceVariant">Stok azalan ürünler</p>
+                    </div>
+                </div>
+                <a href="/admin/products/list" class="absolute inset-0 rounded-[24px]"></a>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <h2 class="text-[22px] font-normal text-md-onSurface mb-4">Hızlı İşlemler</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <button class="bg-md-surface p-4 rounded-[16px] border border-md-outlineVariant/20 text-left hover:bg-md-surfaceDim/50 transition-colors flex items-center gap-4">
+                 <span class="material-symbols-outlined text-md-primary">description</span>
+                 <div>
+                     <span class="block text-sm font-medium text-md-onSurface">Excel İçe Aktar</span>
+                     <span class="text-xs text-md-onSurfaceVariant">Toplu ürün yükleme</span>
+                 </div>
+            </button>
+            <button class="bg-md-surface p-4 rounded-[16px] border border-md-outlineVariant/20 text-left hover:bg-md-surfaceDim/50 transition-colors flex items-center gap-4">
+                 <span class="material-symbols-outlined text-md-primary">receipt_long</span>
+                 <div>
+                     <span class="block text-sm font-medium text-md-onSurface">Alış Faturası</span>
+                     <span class="text-xs text-md-onSurfaceVariant">Stok girişi yap</span>
+                 </div>
+            </button>
+            <button class="bg-md-surface p-4 rounded-[16px] border border-md-outlineVariant/20 text-left hover:bg-md-surfaceDim/50 transition-colors flex items-center gap-4">
+                 <span class="material-symbols-outlined text-md-primary">warehouse</span>
+                 <div>
+                     <span class="block text-sm font-medium text-md-onSurface">Depo Tanımları</span>
+                     <span class="text-xs text-md-onSurfaceVariant">Depo yönetim paneli</span>
+                 </div>
+            </button>
+        </div>
+
+    </main>
+
+</body>
+</html>

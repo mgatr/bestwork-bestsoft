@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategoriler - BestSoft Manager</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                            error: '#B3261E',
+                            onError: '#FFFFFF',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1200px] mx-auto p-4 md:p-6 lg:p-8">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <a href="/admin/dashboard" class="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-md-onSurfaceVariant">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <h1 class="text-[32px] font-normal text-md-onSurface">Kategoriler</h1>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left: Add Category Form -->
+            <div class="lg:col-span-1">
+                <div class="bg-md-surface rounded-[24px] border border-md-outlineVariant/20 shadow-sm p-6 sticky top-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 rounded-full bg-md-primaryContainer flex items-center justify-center text-md-onPrimaryContainer">
+                                <span class="material-symbols-outlined" id="form-icon">add</span>
+                            </span>
+                            <h2 class="text-xl font-normal text-md-onSurface" id="form-title">Yeni Kategori</h2>
+                        </div>
+                        <button type="button" id="cancel-edit" class="hidden text-sm text-md-error font-medium hover:underline" onclick="resetForm()">İptal</button>
+                    </div>
+                    
+                    <form action="/admin/products/categories/add" method="POST" enctype="multipart/form-data" class="space-y-6" id="category-form">
+                        <input type="hidden" name="kategori_id" id="kategori_id">
+                        
+                        <!-- Name Input -->
+                        <div class="relative group">
+                            <input type="text" id="ad" name="ad" required 
+                                class="peer w-full h-[56px] px-4 pt-4 bg-md-surfaceDim/50 border-b border-md-outlineVariant rounded-t-lg focus:border-md-primary focus:border-b-2 focus:outline-none transition-colors placeholder-transparent text-md-onSurface"
+                                placeholder=" ">
+                            <label for="ad" 
+                                class="absolute left-4 top-2 text-xs text-md-primary transition-all 
+                                peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-md-onSurfaceVariant 
+                                peer-focus:top-2 peer-focus:text-xs peer-focus:text-md-primary">
+                                Kategori Adı *
+                            </label>
+                        </div>
+
+                        <!-- Parent Category Select -->
+                        <div class="relative group">
+                            <select id="ust_kategori_id" name="ust_kategori_id" 
+                                class="peer w-full h-[56px] px-4 pt-4 bg-md-surfaceDim/50 border-b border-md-outlineVariant rounded-t-lg focus:border-md-primary focus:border-b-2 focus:outline-none transition-colors text-md-onSurface appearance-none">
+                                <option value="">Yok (Ana Kategori)</option>
+                                {% for cat in categories %}
+                                <option value="{{ cat.id }}">{{ cat.ad }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="ust_kategori_id" 
+                                class="absolute left-4 top-2 text-xs text-md-primary">
+                                Üst Kategori
+                            </label>
+                             <span class="absolute right-4 top-4 pointer-events-none text-md-onSurfaceVariant">
+                                <span class="material-symbols-outlined">arrow_drop_down</span>
+                            </span>
+                        </div>
+
+                        <!-- Description Input -->
+                        <div class="relative group">
+                            <textarea id="aciklama" name="aciklama" rows="3"
+                                class="peer w-full px-4 pt-6 bg-md-surfaceDim/50 border-b border-md-outlineVariant rounded-t-lg focus:border-md-primary focus:border-b-2 focus:outline-none transition-colors placeholder-transparent text-md-onSurface resize-none"
+                                placeholder=" "></textarea>
+                            <label for="aciklama" 
+                                class="absolute left-4 top-2 text-xs text-md-primary transition-all 
+                                peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-md-onSurfaceVariant 
+                                peer-focus:top-2 peer-focus:text-xs peer-focus:text-md-primary">
+                                Açıklama (Opsiyonel)
+                            </label>
+                        </div>
+
+                        <!-- SEO Title Input -->
+                        <div class="relative group">
+                             <input type="text" id="seo_baslik" name="seo_baslik" 
+                                class="peer w-full h-[56px] px-4 pt-4 bg-md-surfaceDim/50 border-b border-md-outlineVariant rounded-t-lg focus:border-md-primary focus:border-b-2 focus:outline-none transition-colors placeholder-transparent text-md-onSurface"
+                                placeholder=" ">
+                            <label for="seo_baslik" 
+                                class="absolute left-4 top-2 text-xs text-md-primary transition-all 
+                                peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-md-onSurfaceVariant 
+                                peer-focus:top-2 peer-focus:text-xs peer-focus:text-md-primary">
+                                SEO Başlık
+                            </label>
+                        </div>
+                        
+                         <!-- File Upload Styled -->
+                        <div class="flex items-center gap-4 p-4 border border-dashed border-md-outlineVariant rounded-xl hover:bg-md-surfaceDim/30 transition-colors">
+                            <div class="w-10 h-10 rounded-full bg-md-secondaryContainer flex items-center justify-center text-md-onSecondaryContainer">
+                                <span class="material-symbols-outlined">image</span>
+                            </div>
+                            <div class="flex-1">
+                                <label for="resim" class="block text-sm font-medium text-md-onSurface cursor-pointer hover:underline">Resim Seç / Güncelle</label>
+                                <input type="file" id="resim" name="resim" class="hidden" onchange="document.getElementById('file-chosen').textContent = this.files[0].name">
+                                <span id="file-chosen" class="text-xs text-md-onSurfaceVariant">Dosya seçilmedi</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="w-full h-10 rounded-full bg-md-primary text-md-onPrimary font-medium text-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]" id="btn-icon">save</span>
+                            <span id="btn-text">Kategoriyi Kaydet</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right: Category List -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Search/Filter could go here -->
+
+                <div class="bg-md-surface rounded-[24px] border border-md-outlineVariant/20 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-md-surfaceDim/30 border-b border-md-outlineVariant/20 text-xs font-medium text-md-onSurfaceVariant uppercase tracking-wider">
+                                    <th class="px-6 py-4">Görsel</th>
+                                    <th class="px-6 py-4">Kategori Adı</th>
+                                    <th class="px-6 py-4">Üst Kategori</th>
+                                    <th class="px-6 py-4">Açıklama</th>
+                                    <th class="px-6 py-4 text-right">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-md-outlineVariant/10">
+                                {% for cat in categories %}
+                                <tr class="hover:bg-md-surfaceDim/30 transition-colors">
+                                    <td class="px-6 py-4">
+                                        {% if cat.resim_url %}
+                                            <div class="w-10 h-10 rounded-lg bg-md-surfaceDim overflow-hidden border border-md-outlineVariant/20">
+                                                <img src="{{ cat.resim_url }}" class="w-full h-full object-cover">
+                                            </div>
+                                        {% else %}
+                                            <div class="w-10 h-10 rounded-lg bg-md-surfaceDim flex items-center justify-center text-md-onSurfaceVariant/50">
+                                                <span class="material-symbols-outlined text-[20px]">image</span>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 font-medium text-md-onSurface">{{ cat.ad }}</td>
+                                     <td class="px-6 py-4 text-sm text-md-onSurfaceVariant">
+                                        {% if cat.ust_kategori_id %}
+                                            <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-md-surfaceDim text-xs font-medium text-md-onSurfaceVariant">
+                                                <span class="material-symbols-outlined text-[14px]">subdirectory_arrow_right</span>
+                                                {{ cat.ust_kategori_id }}
+                                            </div>
+                                        {% else %}
+                                            <span class="text-md-onSurfaceVariant/50">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-md-onSurfaceVariant truncate max-w-[200px]">{{ cat.aciklama }}</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-1">
+                                            <button onclick="editCategory('{{ cat.id }}', '{{ cat.ad }}', '{{ cat.ust_kategori_id or '' }}', '{{ cat.aciklama or '' }}', '{{ cat.seo_baslik or '' }}')" 
+                                                class="w-8 h-8 rounded-full hover:bg-md-primary/10 flex items-center justify-center text-md-primary transition-colors">
+                                                <span class="material-symbols-outlined text-[18px]">edit</span>
+                                            </button>
+                                            
+                                            <form action="/admin/products/categories/delete" method="post" class="inline-block" onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+                                                <input type="hidden" name="kategori_id" value="{{ cat.id }}">
+                                                <button type="submit" class="w-8 h-8 rounded-full hover:bg-md-error/10 flex items-center justify-center text-md-error transition-colors">
+                                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                                {% if not categories %}
+                                <tr>
+                                    <td colspan="5" class="px-6 py-12 text-center">
+                                        <div class="w-16 h-16 bg-md-surfaceDim/50 rounded-full flex items-center justify-center mx-auto mb-3 text-md-onSurfaceVariant/50">
+                                            <span class="material-symbols-outlined text-3xl">category</span>
+                                        </div>
+                                        <h3 class="text-md font-medium text-md-onSurface">Kategori Yok</h3>
+                                        <p class="text-sm text-md-onSurfaceVariant mt-1">Henüz hiç kategori eklenmemiş.</p>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        function editCategory(id, ad, ust_id, aciklama, seo) {
+            // Populate Fields
+            document.getElementById('kategori_id').value = id;
+            document.getElementById('ad').value = ad;
+            document.getElementById('ust_kategori_id').value = ust_id;
+            document.getElementById('aciklama').value = aciklama;
+            document.getElementById('seo_baslik').value = seo;
+            
+            // Change UI State
+            document.getElementById('form-title').innerText = 'Kategori Düzenle';
+            document.getElementById('form-icon').innerText = 'edit';
+            document.getElementById('btn-text').innerText = 'Güncelle';
+            document.getElementById('btn-icon').innerText = 'update';
+            document.getElementById('cancel-edit').classList.remove('hidden');
+            
+            // Change Action
+            document.getElementById('category-form').action = '/admin/products/categories/update';
+            
+            // Scroll to Form check if mobile layout
+            if(window.innerWidth < 1024) {
+                 document.getElementById('category-form').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function resetForm() {
+             document.getElementById('category-form').reset();
+             document.getElementById('kategori_id').value = '';
+             
+             // Reset UI State
+             document.getElementById('form-title').innerText = 'Yeni Kategori';
+             document.getElementById('form-icon').innerText = 'add';
+             document.getElementById('btn-text').innerText = 'Kategoriyi Kaydet';
+             document.getElementById('btn-icon').innerText = 'save';
+             document.getElementById('cancel-edit').classList.add('hidden');
+             document.getElementById('file-chosen').innerText = 'Dosya seçilmedi';
+             
+             // Reset Action
+             document.getElementById('category-form').action = '/admin/products/categories/add';
+        }
+    </script>
+</body>
+</html>
+

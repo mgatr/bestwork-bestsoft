@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tüm Ürünler - BestSoft</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex flex-col w-full max-w-[1200px] mx-auto p-4 md:p-6 lg:p-8">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <a href="/admin/products" class="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-md-onSurfaceVariant">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <h1 class="text-[32px] font-normal text-md-onSurface">Ürün Listesi</h1>
+            </div>
+            
+            <a href="/admin/products/add" class="h-10 px-6 rounded-full bg-md-primary text-md-onPrimary font-medium text-sm hover:shadow-md transition-shadow flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Yeni Ekle
+            </a>
+        </div>
+
+        <!-- Content Card -->
+        <div class="bg-md-surface rounded-[24px] border border-md-outlineVariant/20 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-md-surfaceDim/30 border-b border-md-outlineVariant/20 text-xs font-medium text-md-onSurfaceVariant uppercase tracking-wider">
+                            <th class="px-6 py-4">Görsel</th>
+                            <th class="px-6 py-4">Ürün Bilgisi</th>
+                            <th class="px-6 py-4">Fiyat / Network Puan</th>
+                            <th class="px-6 py-4">Stok</th>
+                            <th class="px-6 py-4 text-right">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-md-outlineVariant/10">
+                        {% for product in products %}
+                        <tr class="hover:bg-md-surfaceDim/30 transition-colors">
+                            <td class="px-6 py-4">
+                                {% if product.resim_url %}
+                                <div class="w-12 h-12 rounded-xl bg-md-surfaceDim/50 overflow-hidden border border-md-outlineVariant/20">
+                                    <img src="{{ product.resim_url }}" class="w-full h-full object-cover">
+                                </div>
+                                {% else %}
+                                <div class="w-12 h-12 rounded-xl bg-md-surfaceDim/50 flex items-center justify-center text-md-onSurfaceVariant/50">
+                                    <span class="material-symbols-outlined text-[20px]">image</span>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="font-medium text-md-onSurface">{{ product.ad }}</div>
+                                <div class="text-xs text-md-onSurfaceVariant mt-1">SKU: {{ product.sku if product.sku else '-' }}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-md-onSurface">{{ product.fiyat }} ₺</div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-full font-medium border border-indigo-100">{{ product.pv_degeri }} PV</span>
+                                    <span class="text-[10px] px-2 py-0.5 bg-orange-50 text-orange-700 rounded-full font-medium border border-orange-100">{{ product.cv_degeri }} CV</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if product.stok <= product.kritik_stok %}
+                                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-100 text-xs font-medium">
+                                        {{ product.stok }} Adet (Kritik)
+                                    </div>
+                                {% else %}
+                                    <span class="text-sm text-md-onSurfaceVariant">{{ product.stok }} Adet</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex items-center justify-end gap-1">
+                                    <button class="w-8 h-8 rounded-full hover:bg-md-surfaceDim flex items-center justify-center text-md-primary transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">edit</span>
+                                    </button>
+                                    <button class="w-8 h-8 rounded-full hover:bg-red-50 flex items-center justify-center text-red-600 transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        {% if not products %}
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center">
+                                <div class="w-16 h-16 bg-md-surfaceDim/50 rounded-full flex items-center justify-center mx-auto mb-3 text-md-onSurfaceVariant/50">
+                                    <span class="material-symbols-outlined text-3xl">inventory_2</span>
+                                </div>
+                                <h3 class="text-md font-medium text-md-onSurface">Ürün Bulunamadı</h3>
+                                <p class="text-sm text-md-onSurfaceVariant mt-1">Listenizde henüz ürün yok.</p>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+</body>
+</html>
+

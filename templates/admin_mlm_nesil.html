@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nesil Gelirleri - BestSoft</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <a href="/admin/ayarlar" class="text-blue-600 hover:underline mb-2 inline-block">← Ayarlara Dön</a>
+            <h1 class="text-4xl font-bold text-gray-900">Nesil Geliri Oranları</h1>
+            <p class="text-gray-600 mt-2">1-10. nesil liderlik primi oranlarını ayarlayın</p>
+        </div>
+
+        <!-- Başarı Mesajı -->
+        {% if request.query_params.get('basari') %}
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+            ✓ Nesil oranları başarıyla güncellendi!
+        </div>
+        {% endif %}
+
+        <!-- Açıklama -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 mb-6">
+            <h3 class="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                <span class="material-symbols-outlined">info</span>
+                Nesil Geliri Nedir?
+            </h3>
+            <p class="text-sm text-blue-800">
+                Bir kullanıcı eşleşme bonusu (matching bonus) kazandığında, bu kazancın belirli bir yüzdesi
+                sponsor hattı boyunca yukarı doğru dağıtılır. 1. nesil = direkt sponsor, 2. nesil = sponsor'un sponsor'u vs.
+            </p>
+        </div>
+
+        <!-- Form -->
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+            <form method="POST" action="/admin/mlm/nesil/guncelle" class="space-y-4">
+
+                <!-- Nesil Tablosu -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for nesil in nesil_ayarlari %}
+                    <div class="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg border border-gray-200">
+                        <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                            {{ nesil.nesil_no }}
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                {{ nesil.nesil_no }}. Nesil Oranı
+                            </label>
+                            <div class="flex items-center gap-2">
+                                <input type="number" step="0.01" min="0" max="1"
+                                       name="nesil_{{ nesil.nesil_no }}"
+                                       value="{{ nesil.oran }}"
+                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <span class="text-sm font-semibold text-blue-600 w-16">= %{{ (nesil.oran * 100)|int }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Eğer 10 nesil yoksa varsayılan form alanları ekle -->
+                {% if nesil_ayarlari|length < 10 %}
+                {% for i in range(nesil_ayarlari|length + 1, 11) %}
+                <div class="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg border border-gray-200">
+                    <div class="w-12 h-12 rounded-full bg-gray-400 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                        {{ i }}
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            {{ i }}. Nesil Oranı
+                        </label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" step="0.01" min="0" max="1"
+                                   name="nesil_{{ i }}"
+                                   value="0.00"
+                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <span class="text-sm font-semibold text-gray-600 w-16">= %0</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <!-- Kaydet Butonu -->
+                <div class="pt-6">
+                    <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">save</span>
+                        Nesil Oranlarını Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Örnek Hesaplama -->
+        <div class="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-6">
+            <h3 class="font-semibold text-amber-900 mb-3">📊 Örnek Hesaplama</h3>
+            <p class="text-sm text-amber-800 mb-2">
+                Kullanıcı A, 100 CV eşleşme bonusu kazandı. Sponsor hattı boyunca şu şekilde dağıtılır:
+            </p>
+            <ul class="text-sm text-amber-800 space-y-1">
+                {% for nesil in nesil_ayarlari[:5] %}
+                <li>• {{ nesil.nesil_no }}. Nesil Lideri: 100 × {{ nesil.oran }} = <strong>{{ 100 * nesil.oran }} CV</strong></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,702 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<!-- Breadcrumb & Header -->
+<div class="bg-surface-container-low py-3 px-4 sm:px-6 lg:px-8 border-b border-outline-variant mb-6">
+    <div class="max-w-7xl mx-auto flex items-center text-sm text-on-surface-variant">
+        <a href="/" class="hover:text-primary font-medium">ANASAYFA</a>
+        <span class="mx-2 text-outline">/</span>
+        <span class="text-on-surface font-medium">Binary Ağacı</span>
+    </div>
+</div>
+
+<div class="min-h-[calc(100vh-80px)] bg-surface p-0 lg:p-6 flex flex-col">
+    <!-- Control Bar -->
+    <div class="bg-surface-container-low border-b lg:border border-outline-variant/20 lg:rounded-2xl shadow-sm px-4 py-3 flex items-center justify-between z-20 relative">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined">account_tree</span>
+            </div>
+            <div>
+                <h1 class="text-lg font-display font-bold text-on-surface leading-tight">Binary Ağacı</h1>
+                <p class="text-xs text-on-surface-variant hidden sm:block">Ekibinizi detaylı inceleyin ve yönetin</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+            <!-- Search Bar -->
+            <div class="relative hidden sm:block">
+                <input type="text" id="tree-search" placeholder="İsim veya Üye No ile ara..." 
+                    class="pl-9 pr-4 py-2 rounded-lg bg-surface-container text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 w-48 transition-all focus:w-64"
+                    autocomplete="off">
+                <span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+                
+                <!-- Search Results Dropdown -->
+                <div id="search-results" class="absolute top-full left-0 w-64 mt-2 bg-surface-container-high rounded-xl shadow-xl border border-outline-variant/20 max-h-60 overflow-y-auto hidden z-50">
+                </div>
+            </div>
+
+            <div class="h-6 w-px bg-outline-variant/20 mx-1 hidden sm:block"></div>
+
+            <button onclick="resetZoom()" class="p-2 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors" title="Merkeze Odakla">
+                <span class="material-symbols-outlined">center_focus_strong</span>
+            </button>
+            <div class="h-6 w-px bg-outline-variant/20 mx-1"></div>
+            <button onclick="zoomOut()" class="p-2 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">remove</span>
+            </button>
+            <button onclick="zoomIn()" class="p-2 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">add</span>
+            </button>
+            
+            <div class="h-6 w-px bg-outline-variant/20 mx-1"></div>
+            
+            <!-- Bekleyenler butonu kaldırıldı -->
+        </div>
+    </div>
+
+    <!-- Tree Container -->
+    <div class="flex-1 relative overflow-hidden bg-surface-container lg:rounded-b-2xl lg:mt-0 border-x border-b border-outline-variant/20 shadow-inner min-h-[600px] flex">
+        
+        <!-- Sidebar kaldırıldı -->
+
+        <div class="flex-1 relative h-full">
+            <!-- Loading State -->
+            <div id="loading-state" class="absolute inset-0 flex flex-col items-center justify-center bg-surface-container z-50">
+                <div class="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4"></div>
+                <p class="text-sm font-medium text-on-surface-variant animate-pulse">Ağaç verileri yükleniyor...</p>
+            </div>
+            
+            <!-- Error State -->
+            <div id="error-state" class="hidden absolute inset-0 flex-col items-center justify-center bg-surface-container z-50">
+                <span class="material-symbols-outlined text-4xl text-error mb-2">error</span>
+                <p id="error-message" class="text-error font-medium">Bir hata oluştu</p>
+                <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm hover:bg-primary/90 transition-colors">
+                    Sayfayı Yenile
+                </button>
+            </div>
+
+            <!-- Visualization -->
+            <div id="tree-viz" class="w-full h-full min-h-[600px] cursor-grab active:cursor-grabbing touch-none"></div>
+            
+            <!-- Legend / Info -->
+            <div class="absolute bottom-4 left-4 right-4 sm:left-auto sm:right-6 bg-surface/90 backdrop-blur-md p-3 rounded-xl border border-outline-variant/20 shadow-lg text-xs flex flex-wrap gap-3 justify-center sm:justify-start z-10">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full bg-primary"></span>
+                    <span class="text-on-surface font-medium">Dolu Pozisyon</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-full border-2 border-dashed border-outline-variant"></span>
+                    <span class="text-on-surface font-medium">Boş Pozisyon</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Yerleştirme Onayı -->
+<div id="placement-modal" class="fixed inset-0 bg-black/50 z-[60] hidden items-center justify-center backdrop-blur-sm">
+    <div class="bg-surface-container-high rounded-2xl shadow-2xl max-w-sm w-full mx-4 overflow-hidden transform transition-all scale-95 opacity-0" id="placement-modal-content">
+        <div class="p-6 text-center">
+            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
+                <span class="material-symbols-outlined text-3xl">person_add</span>
+            </div>
+            <h3 class="text-lg font-bold text-on-surface mb-2">Üye Yerleştirme</h3>
+            <p class="text-sm text-on-surface-variant mb-6">
+                <span class="font-semibold text-primary" id="modal-uye-ad"></span> isimli üyeyi, 
+                <span class="font-semibold text-on-surface" id="modal-parent-ad"></span> kişisinin 
+                <span class="font-bold" id="modal-kol"></span> koluna yerleştirmek istiyor musunuz?
+            </p>
+            <div class="flex gap-3">
+                <button onclick="closePlacementModal()" class="flex-1 py-2.5 border border-outline-variant rounded-xl text-on-surface font-medium hover:bg-surface-container-highest transition-colors">
+                    İptal
+                </button>
+                <button onclick="confirmPlacement()" class="flex-1 py-2.5 bg-primary text-on-primary rounded-xl font-medium hover:bg-primary-dark transition-colors shadow-lg shadow-primary/30">
+                    Onayla
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Bekleyen Üyeler Listesi (Detaylı) -->
+<div id="waiting-list-modal" class="fixed inset-0 bg-black/50 z-[70] hidden flex items-center justify-center backdrop-blur-sm p-4">
+    <div class="bg-surface-container-high rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden flex flex-col max-h-[90vh]" id="waiting-list-modal-content">
+        <div class="p-6 border-b border-outline-variant/20 flex flex-col sm:flex-row justify-between items-center gap-4 bg-surface-container relative">
+            <div>
+                <h3 class="text-xl font-bold text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-orange-500">hourglass_top</span>
+                    Bekleyen Üyeler Listesi
+                </h3>
+                <p class="text-sm text-on-surface-variant mt-1">Ağaca yerleştirilmeyi bekleyen üyeleriniz</p>
+            </div>
+            
+            <div class="relative w-full sm:w-72">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-on-surface-variant">
+                    <span class="material-symbols-outlined text-[20px]">search</span>
+                </span>
+                <input type="text" oninput="filterWaitingList(this.value)" placeholder="İsim, e-posta veya tel ara..." class="w-full pl-10 pr-4 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none text-sm bg-surface-container-lowest text-on-surface">
+            </div>
+
+            <button onclick="closeWaitingListModal()" class="p-2 rounded-full hover:bg-surface-container-highest text-on-surface-variant transition-colors absolute top-4 right-4 sm:static">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <div class="flex-1 overflow-auto p-0">
+            <table class="min-w-full divide-y divide-outline-variant/20">
+                <thead class="bg-surface-container-highest sticky top-0 z-10">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Üye No</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Ad Soyad</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">E-posta</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Telefon</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider">Kayıt Tarihi</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-bold text-on-surface uppercase tracking-wider">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-surface-container-low divide-y divide-outline-variant/20" id="waiting-list-table-body">
+                    <!-- JS ile doldurulacak -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="p-4 border-t border-outline-variant/20 bg-surface-container text-right">
+            <button onclick="closeWaitingListModal()" class="px-4 py-2 bg-surface-container-highest text-on-surface rounded-lg hover:bg-surface-container font-medium transition-colors">
+                Kapat
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<script>
+let svg, g, zoom;
+let allUsers = []; 
+let selectedMemberId = null; // Seçili bekleyen üye ID'si
+let selectedMemberName = ""; // Seçili bekleyen üye Adı
+let waitingMembersData = []; // Filtreleme için veri deposu
+let targetPlacement = null; // Hedef yerleştirme bilgisi {parent, kol}
+
+// Modal İşlemleri (Yeni)
+async function openWaitingListModal() {
+    const modal = document.getElementById('waiting-list-modal');
+    const tbody = document.getElementById('waiting-list-table-body');
+    
+    modal.classList.remove('hidden');
+    tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">Yükleniyor...</td></tr>';
+    
+    try {
+        const response = await fetch('/api/bekleyen-uyeler/{{ user_id }}');
+        waitingMembersData = await response.json();
+        renderWaitingListTable(waitingMembersData);
+    } catch (error) {
+        console.error("Bekleyen üyeler yüklenemedi:", error);
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Veriler yüklenirken hata oluştu.</td></tr>';
+    }
+}
+
+function renderWaitingListTable(members) {
+    const tbody = document.getElementById('waiting-list-table-body');
+    
+    if (members.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-on-surface-variant">Sonuç bulunamadı.</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = members.map(m => `
+        <tr class="hover:bg-surface-container-highest transition-colors cursor-pointer" onclick="selectUserFromTable(${m.id}, '${m.tam_ad.replace(/'/g, "\\'")}')">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface font-medium">#${m.uye_no}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface">
+                <div class="flex items-center">
+                    <div class="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold mr-3">
+                        ${m.tam_ad.charAt(0)}
+                    </div>
+                    ${m.tam_ad}
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">${m.email || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">${m.telefon || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">${new Date(m.kayit_tarihi).toLocaleDateString('tr-TR')}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button class="text-primary hover:text-primary-dark bg-primary/5 hover:bg-primary/10 px-3 py-1.5 rounded-md transition-colors">
+                    Seç
+                </button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function filterWaitingList(query) {
+    if (!query) {
+        renderWaitingListTable(waitingMembersData);
+        return;
+    }
+    const lowerQuery = query.toLowerCase();
+    const filtered = waitingMembersData.filter(m => 
+        m.tam_ad.toLowerCase().includes(lowerQuery) ||
+        (m.email && m.email.toLowerCase().includes(lowerQuery)) ||
+        (m.telefon && m.telefon.includes(query)) ||
+        (m.uye_no && m.uye_no.toString().includes(query))
+    );
+    renderWaitingListTable(filtered);
+}
+
+function closeWaitingListModal() {
+    document.getElementById('waiting-list-modal').classList.add('hidden');
+}
+
+function selectUserFromTable(id, name) {
+    selectedMemberId = id;
+    selectedMemberName = name;
+    closeWaitingListModal();
+    
+    // Sidebar'daki seçimi güncelle (varsa)
+    document.querySelectorAll('.member-card').forEach(el => {
+        el.classList.remove('ring-2', 'ring-primary', 'bg-primary/5');
+        el.querySelector('.selection-indicator div').classList.add('opacity-0');
+    });
+    
+    // Sidebar item'ı bulmak için daha esnek bir seçici kullanalım
+    // onclick="selectMember(123, this)" şeklindeki attribute'u arıyoruz
+    const sidebarItems = document.querySelectorAll('.member-card');
+    for (let item of sidebarItems) {
+        if (item.getAttribute('onclick').includes(`selectMember(${id},`)) {
+            item.classList.add('ring-2', 'ring-primary', 'bg-primary/5');
+            item.querySelector('.selection-indicator div').classList.remove('opacity-0');
+            break;
+        }
+    }
+
+    // Bildirim
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-4 right-4 bg-surface-container-highest text-on-surface border border-outline-variant/20 px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-3 animate-fade-in-up';
+    toast.innerHTML = `
+        <span class="material-symbols-outlined text-green-400">check_circle</span>
+        <div>
+            <div class="font-medium">Üye Seçildi</div>
+            <div class="text-sm text-on-surface-variant">${name} yerleştirilmek üzere seçildi. Lütfen ağaçtan bir pozisyon seçin.</div>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+}
+
+// Modal İşlemleri
+function openPlacementModal(parentName, parentId, kol) {
+    if (!selectedMemberId) {
+        // Eğer seçim yapılmadıysa kullanıcıyı uyar ve modalı açmayı öner
+        if (confirm("Lütfen önce yerleştirilecek üyeyi seçin. Bekleyenler listesini açmak ister misiniz?")) {
+            openWaitingListModal();
+        }
+        return;
+    }
+
+    targetPlacement = { parentId, kol };
+    
+    // Seçili üyenin adını bul
+    let memberName = selectedMemberName || "Seçili Üye";
+
+    document.getElementById('modal-uye-ad').textContent = memberName;
+    document.getElementById('modal-parent-ad').textContent = parentName || "Bilinmeyen";
+    document.getElementById('modal-kol').textContent = kol === "SOL" ? "SOL" : "SAĞ";
+    
+    const modal = document.getElementById('placement-modal');
+    const content = document.getElementById('placement-modal-content');
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    // Animasyon
+    setTimeout(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+    }, 10);
+}
+
+function closePlacementModal() {
+    const modal = document.getElementById('placement-modal');
+    const content = document.getElementById('placement-modal-content');
+    
+    content.classList.remove('scale-100', 'opacity-100');
+    content.classList.add('scale-95', 'opacity-0');
+    
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        targetPlacement = null;
+    }, 200);
+}
+
+async function confirmPlacement() {
+    if (!selectedMemberId || !targetPlacement) return;
+
+    const formData = new FormData();
+    formData.append('uye_id', selectedMemberId);
+    formData.append('parent_id', targetPlacement.parentId);
+    formData.append('kol', targetPlacement.kol);
+
+    try {
+        const response = await fetch('/api/yerlestir', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            closePlacementModal();
+            // Başarılı mesajı gösterilebilir
+            location.reload(); // Sayfayı yenile
+        } else {
+            alert("Hata: " + result.message);
+        }
+    } catch (error) {
+        console.error("Yerleştirme hatası:", error);
+        alert("Bir hata oluştu!");
+    }
+}
+
+const container = document.getElementById('tree-viz');
+let globalTreeData = null;
+
+function showError(message) {
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('error-state').style.display = 'flex';
+    document.getElementById('error-message').textContent = message;
+    console.error(message);
+}
+
+async function initTree() {
+    try {
+        if (typeof d3 === 'undefined') {
+            throw new Error("D3.js kütüphanesi yüklenemedi. İnternet bağlantınızı kontrol edin.");
+        }
+        
+        const response = await fetch('/api/tree/{{ user_id }}');
+        if (!response.ok) throw new Error(`Sunucu hatası: ${response.status}`);
+        
+        const data = await response.json();
+        if (!data) throw new Error("Ağaç verisi bulunamadı.");
+        
+        globalTreeData = data;
+
+        // Kullanıcı listesini oluştur
+        allUsers = flattenUsers(data);
+        
+        renderTree(globalTreeData);
+        document.getElementById('loading-state').style.display = 'none';
+        
+        // Window resize handler
+        window.addEventListener('resize', () => {
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(() => {
+                renderTree(globalTreeData);
+            }, 250);
+        });
+
+    } catch (error) {
+        showError(error.message || "Ağaç yüklenirken bir hata oluştu.");
+    }
+}
+
+// Helper: Hiyerarşik veriyi düz listeye çevir
+function flattenUsers(node, list = []) {
+    if (node.id) {
+        list.push({ id: node.id, name: node.name, uye_no: node.uye_no });
+    }
+    if (node.children) {
+        node.children.forEach(child => flattenUsers(child, list));
+    }
+    return list;
+}
+
+// Arama Mantığı
+const searchInput = document.getElementById('tree-search');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase();
+    if (query.length < 1) {
+        searchResults.classList.add('hidden');
+        return;
+    }
+
+    const matches = allUsers.filter(u => 
+        u.name.toLowerCase().includes(query) || 
+        (u.uye_no && u.uye_no.toString().includes(query))
+    );
+
+    displayResults(matches);
+});
+
+// Dışarı tıklandığında listeyi kapat
+document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        searchResults.classList.add('hidden');
+    }
+});
+
+function displayResults(matches) {
+    searchResults.innerHTML = '';
+    if (matches.length === 0) {
+        searchResults.innerHTML = '<div class="p-3 text-sm text-on-surface-variant text-center">Kullanıcı bulunamadı</div>';
+    } else {
+        matches.forEach(user => {
+            const div = document.createElement('div');
+            div.className = 'p-3 hover:bg-surface-container cursor-pointer flex items-center gap-3 border-b border-outline-variant/10 last:border-0';
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-lg">person</span>
+                </div>
+                <div>
+                    <div class="text-sm font-medium text-on-surface">${user.name}</div>
+                    <div class="text-xs text-on-surface-variant">Üye No: ${user.uye_no}</div>
+                </div>
+            `;
+            div.onclick = () => {
+                focusNode(user.id);
+                searchResults.classList.add('hidden');
+                searchInput.value = user.name;
+            };
+            searchResults.appendChild(div);
+        });
+    }
+    searchResults.classList.remove('hidden');
+}
+
+function focusNode(userId) {
+    const allNodes = d3.selectAll(".node").data();
+    const found = allNodes.find(d => d.data.id == userId);
+    
+    if (found) {
+        const width = document.getElementById('tree-viz').clientWidth;
+        const height = document.getElementById('tree-viz').clientHeight;
+        const scale = 1.5;
+        
+        const x = -found.x * scale + width / 2;
+        const y = -found.y * scale + height / 2;
+        
+        svg.transition().duration(750).call(
+            zoom.transform,
+            d3.zoomIdentity.translate(x, y).scale(scale)
+        );
+        
+        // Highlight
+        const nodeElement = d3.selectAll(".node")
+            .filter(d => d === found)
+            .select("rect");
+            
+        nodeElement
+            .transition().duration(300)
+            .attr("stroke", "#7C3AED")
+            .attr("stroke-width", 4)
+            .transition().duration(1000)
+            .attr("stroke-width", 0);
+    }
+}
+
+async function loadMoreNodes(d3Node) {
+    const nodeId = d3Node.data.id;
+    if (!nodeId) return;
+
+    // Loading göster
+    document.getElementById('loading-state').style.display = 'flex';
+    
+    try {
+        const response = await fetch('/api/tree/' + nodeId);
+        if (!response.ok) throw new Error("Veri alınamadı");
+        
+        const newData = await response.json();
+        
+        // Veriyi güncelle (Referans üzerinden globalTreeData da güncellenir)
+        Object.assign(d3Node.data, newData);
+        delete d3Node.data.expandable; // Artık genişletilebilir değil, yüklendi.
+        
+        // Listeyi güncelle
+        allUsers = flattenUsers(globalTreeData);
+        
+        // Yeniden çiz
+        renderTree(globalTreeData);
+        
+    } catch (e) {
+        console.error(e);
+        alert("Alt ağaç yüklenirken hata oluştu.");
+    } finally {
+        document.getElementById('loading-state').style.display = 'none';
+        
+        // Zoom'u koru veya ilgili node'a odakla
+        // İsteğe bağlı: focusNode(nodeId);
+    }
+}
+
+function renderTree(data) {
+    // Temizle
+    d3.select("#tree-viz").selectAll("*").remove();
+
+    const container = document.getElementById('tree-viz');
+    let width = container.clientWidth;
+    let height = container.clientHeight;
+    
+    // Fallback boyutlar
+    if (!width || width === 0) width = window.innerWidth;
+    if (!height || height === 0) height = 600;
+    
+    // Mobil optimizasyonu için node boyutları
+    const isMobile = width < 768;
+    const nodeWidth = isMobile ? 140 : 180;
+    const nodeHeight = isMobile ? 60 : 70;
+    const verticalGap = isMobile ? 80 : 100;
+
+    zoom = d3.zoom()
+        .scaleExtent([0.1, 2])
+        .on("zoom", (event) => {
+            g.attr("transform", event.transform);
+        });
+
+    svg = d3.select("#tree-viz")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .call(zoom)
+        .on("dblclick.zoom", null); // Çift tıklama zoom'unu kapat
+
+    g = svg.append("g");
+
+    const treeLayout = d3.tree()
+        .nodeSize([nodeWidth + 20, verticalGap + nodeHeight]);
+
+    const root = d3.hierarchy(data);
+    treeLayout(root);
+
+    // Başlangıç pozisyonunu ayarla (Ortala ve biraz aşağıdan başlat)
+    const initialTransform = d3.zoomIdentity
+        .translate(width / 2, 50)
+        .scale(isMobile ? 0.7 : 0.9);
+    
+    svg.call(zoom.transform, initialTransform);
+
+    // Bağlantılar (Curved Lines)
+    g.selectAll(".link")
+        .data(root.links())
+        .enter()
+        .append("path")
+        .attr("class", "link")
+        .attr("d", d3.linkVertical()
+            .x(d => d.x)
+            .y(d => d.y))
+        .attr("fill", "none")
+        .attr("stroke", "#E0E0E0")
+        .attr("stroke-width", 2);
+
+    // Node Grupları
+    const nodes = g.selectAll(".node")
+        .data(root.descendants())
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", d => `translate(${d.x},${d.y})`)
+        .style("cursor", "pointer")
+        .on("click", async (event, d) => {
+            if (d.data.expandable) {
+                // --- LAZY LOADING ---
+                event.stopPropagation();
+                await loadMoreNodes(d);
+            } else if (d.data.id) {
+                // Dolu node tıklama işlemi
+                console.log("Üye ID:", d.data.id);
+            } else {
+                // Boş node tıklama işlemi (Yerleştirme Modalı)
+                const parentName = d.parent ? d.parent.data.name : "Bilinmeyen";
+                openPlacementModal(parentName, d.data.parent, d.data.kol);
+            }
+        });
+
+    // Node Kartı
+    nodes.append("rect")
+        .attr("width", nodeWidth)
+        .attr("height", nodeHeight)
+        .attr("x", -nodeWidth / 2)
+        .attr("y", 0)
+        .attr("rx", 12)
+        .attr("fill", d => {
+            if (d.data.expandable) return "#F3E8FF"; // Lila rengi (Daha Fazla)
+            return d.data.id ? "#FFFFFF" : "#F8F9FA";
+        })
+        .attr("stroke", d => {
+            if (d.data.expandable) return "#7C3AED";
+            return d.data.id ? "#6750A4" : "#D1D5DB";
+        })
+        .attr("stroke-width", d => d.data.id || d.data.expandable ? 1 : 1)
+        .attr("stroke-dasharray", d => d.data.id || d.data.expandable ? "0" : "4,4")
+        .style("filter", "drop-shadow(0px 4px 6px rgba(0,0,0,0.05))");
+
+    // İsim ve Bilgiler
+    const textGroup = nodes.append("g")
+        .attr("transform", `translate(0, ${nodeHeight/2 - 12})`);
+
+    // İsim
+    textGroup.append("text")
+        .attr("text-anchor", "middle")
+        .attr("font-family", "'Inter', sans-serif")
+        .attr("font-size", isMobile ? "12px" : "13px")
+        .attr("font-weight", "600")
+        .attr("fill", d => d.data.id ? "#1F2937" : "#9CA3AF")
+        .text(d => {
+            const name = d.data.name;
+            return name.length > 15 ? name.substring(0, 14) + "..." : name;
+        });
+
+    // Üye No (Sadece dolu ise)
+    textGroup.filter(d => d.data.id).append("text")
+        .attr("text-anchor", "middle")
+        .attr("y", 14)
+        .attr("font-family", "'Inter', sans-serif")
+        .attr("font-size", "10px")
+        .attr("font-weight", "500")
+        .attr("fill", "#6750A4")
+        .text(d => d.data.uye_no || d.data.id);
+
+    // PV Bilgisi (Sadece dolu ise)
+    textGroup.filter(d => d.data.id).append("text")
+        .attr("text-anchor", "middle")
+        .attr("y", 28)
+        .attr("font-family", "'Inter', sans-serif")
+        .attr("font-size", "10px")
+        .attr("font-weight", "500")
+        .attr("fill", "#6B7280")
+        .text(d => d.data.pv);
+        
+    // Boş ise "Yeni Kayıt" yazısı
+    textGroup.filter(d => !d.data.id).append("text")
+        .attr("text-anchor", "middle")
+        .attr("y", 16)
+        .attr("font-family", "'Inter', sans-serif")
+        .attr("font-size", "11px")
+        .attr("fill", "#9CA3AF")
+        .text("Yeni Kayıt");
+}
+
+// Kontrol Fonksiyonları
+function zoomIn() {
+    svg.transition().duration(300).call(zoom.scaleBy, 1.2);
+}
+
+function zoomOut() {
+    svg.transition().duration(300).call(zoom.scaleBy, 0.8);
+}
+
+function resetZoom() {
+    const width = document.getElementById('tree-viz').clientWidth;
+    const isMobile = width < 768;
+    svg.transition().duration(750).call(
+        zoom.transform,
+        d3.zoomIdentity.translate(width / 2, 50).scale(isMobile ? 0.7 : 0.9)
+    );
+}
+
+initTree();
+</script>
+{% endblock %}

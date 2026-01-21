@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BestSoft Admin - Giriş</title>
+    
+    <!-- Material Symbols & Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration for Material 3 Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            surface: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            surfaceVariant: '#E7E0EC',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            error: '#B3261E',
+                            onError: '#FFFFFF',
+                        }
+                    },
+                    boxShadow: {
+                        'md-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'md-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#FFFBFE] h-screen flex items-center justify-center m-0 p-4">
+
+    <!-- Login Card -->
+    <div class="bg-[#FEF7FF] rounded-[28px] w-full max-w-[400px] p-8 flex flex-col gap-6 shadow-md-1 relative overflow-hidden">
+        
+        <!-- Decorative Background Circle (Optional M3 Vibe) -->
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-md-primaryContainer rounded-full opacity-20 blur-2xl pointer-events-none"></div>
+
+        <!-- Header Section -->
+        <div class="flex flex-col items-center text-center pt-2">
+            <span class="material-symbols-outlined text-[48px] text-md-primary mb-4">diamond</span>
+            <h1 class="text-[28px] leading-9 text-md-onSurface font-normal">BestSoft</h1>
+            <p class="text-[14px] leading-5 text-md-onSurfaceVariant mt-2">Yönetim Paneline Giriş</p>
+        </div>
+
+        {% if hata %}
+        <div class="bg-[#F9DEDC] text-[#410E0B] p-3 rounded-[12px] flex items-center gap-3 text-sm animate-pulse">
+            <span class="material-symbols-outlined text-[20px]">error</span>
+            <span>{{ hata }}</span>
+        </div>
+        {% endif %}
+
+        <form action="/bestsoft/login" method="POST" class="flex flex-col gap-4 mt-2">
+            
+            <!-- Username Input -->
+            <div class="relative group">
+                <div class="bg-md-surfaceVariant rounded-t-[4px] h-[56px] border-b border-md-onSurfaceVariant flex flex-col justify-center px-4 transition-colors group-focus-within:bg-md-surfaceVariant/80 group-focus-within:border-b-2 group-focus-within:border-md-primary hover:bg-[#E1DDEC]">
+                    <input type="text" name="username" id="username" placeholder=" " required
+                        class="bg-transparent border-none outline-none text-[16px] text-md-onSurface w-full h-full pt-5 peer placeholder-shown:pt-0"
+                    >
+                    <label for="username" 
+                        class="absolute left-4 top-2 text-[12px] text-md-primary transition-all 
+                               peer-placeholder-shown:top-[18px] peer-placeholder-shown:text-[16px] peer-placeholder-shown:text-md-onSurfaceVariant
+                               peer-focus:top-2 peer-focus:text-[12px] peer-focus:text-md-primary pointer-events-none">
+                        Kullanıcı Adı
+                    </label>
+                </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="relative group">
+                <div class="bg-md-surfaceVariant rounded-t-[4px] h-[56px] border-b border-md-onSurfaceVariant flex flex-col justify-center px-4 transition-colors group-focus-within:bg-md-surfaceVariant/80 group-focus-within:border-b-2 group-focus-within:border-md-primary hover:bg-[#E1DDEC]">
+                    <input type="password" name="password" id="password" placeholder=" " required
+                        class="bg-transparent border-none outline-none text-[16px] text-md-onSurface w-full h-full pt-5 peer placeholder-shown:pt-0"
+                    >
+                    <label for="password" 
+                        class="absolute left-4 top-2 text-[12px] text-md-primary transition-all 
+                               peer-placeholder-shown:top-[18px] peer-placeholder-shown:text-[16px] peer-placeholder-shown:text-md-onSurfaceVariant
+                               peer-focus:top-2 peer-focus:text-[12px] peer-focus:text-md-primary pointer-events-none">
+                        Şifre
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-4">
+                <button type="submit" 
+                    class="bg-md-primary text-md-onPrimary h-[40px] px-8 rounded-full text-[14px] font-medium flex items-center justify-center gap-2 shadow-md-1 hover:shadow-md-2 active:scale-95 transition-all">
+                    <span>Giriş Yap</span>
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </button>
+            </div>
+
+        </form>
+
+        <div class="mt-4 text-center">
+             <a href="#" class="text-[14px] text-md-primary font-medium hover:underline">Şifremi Unuttum?</a>
+        </div>
+    </div>
+
+</body>
+</html>

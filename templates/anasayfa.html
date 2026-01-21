@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<!-- Hero Section -->
+<section class="pt-6 pb-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-[1600px] mx-auto">
+        <div class="relative rounded-[2.5rem] overflow-hidden bg-surface-container-low min-h-[600px] flex items-center group shadow-2xl ring-1 ring-black/5">
+            <!-- Slider Images -->
+            <div id="hero-slider" class="absolute inset-0 z-0">
+                {% if sliders %}
+                    {% for slide in sliders %}
+                        <div class="absolute inset-0 transition-all duration-1000 ease-in-out {{ 'opacity-100 z-10' if loop.first else 'opacity-0' }} slide-item">
+                            {% if slide.link %}
+                            <a href="{{ slide.link }}" target="_blank" class="block w-full h-full cursor-pointer relative z-30"> 
+                            {% endif %}
+                                <img src="{{ slide.resim_yolu }}" alt="{{ slide.baslik or 'Slider Görseli' }}" class="w-full h-full object-cover transition-transform duration-[3000ms] ease-out {{ 'scale-110' if loop.first else 'scale-100' }} slide-img">
+                                <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60 mix-blend-multiply pointer-events-none"></div>
+                                {% if slide.baslik %}
+                                <div class="absolute bottom-32 left-8 md:left-16 z-20 text-white max-w-2xl pointer-events-none">
+                                    <h2 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-xl slide-title opacity-0 translate-y-4 transition-all duration-700 delay-300">{{ slide.baslik }}</h2>
+                                    {% if slide.aciklama %}<p class="text-lg md:text-xl text-white/90 drop-shadow-md slide-desc opacity-0 translate-y-4 transition-all duration-700 delay-500">{{ slide.aciklama }}</p>{% endif %}
+                                </div>
+                                {% endif %}
+                            {% if slide.link %}
+                            </a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                <!-- Slide 1 -->
+                <div class="absolute inset-0 transition-all duration-1000 ease-in-out opacity-100 slide-item z-10">
+                    <img src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?q=80&w=2070&auto=format&fit=crop" alt="Wellness Spa" class="w-full h-full object-cover transition-transform duration-[3000ms] ease-out scale-110 slide-img">
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60 mix-blend-multiply"></div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="absolute inset-0 transition-all duration-1000 ease-in-out opacity-0 slide-item">
+                    <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop" alt="Natural Healing" class="w-full h-full object-cover transition-transform duration-[3000ms] ease-out scale-100 slide-img">
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60 mix-blend-multiply"></div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="absolute inset-0 transition-all duration-1000 ease-in-out opacity-0 slide-item">
+                    <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=2070&auto=format&fit=crop" alt="Serenity" class="w-full h-full object-cover transition-transform duration-[3000ms] ease-out scale-100 slide-img">
+                    <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60 mix-blend-multiply"></div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <button onclick="prevSlide()" class="absolute left-8 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 shadow-lg">
+                <span class="material-symbols-outlined text-3xl">chevron_left</span>
+            </button>
+            <button onclick="nextSlide()" class="absolute right-8 z-20 p-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 hover:scale-110 transition-all duration-300 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 shadow-lg">
+                <span class="material-symbols-outlined text-3xl">chevron_right</span>
+            </button>
+            
+            <!-- Navigation Dots -->
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+                {% if sliders %}
+                    {% for slide in sliders %}
+                    <button class="w-3 h-3 rounded-full {{ 'bg-white ring-2 ring-white/30' if loop.first else 'bg-white/50' }} transition-all duration-300 hover:scale-125 slider-dot shadow-lg hover:bg-white/80" onclick="goToSlide({{ loop.index0 }})"></button>
+                    {% endfor %}
+                {% else %}
+                <button class="w-3 h-3 rounded-full bg-white transition-all duration-300 hover:scale-125 slider-dot active shadow-lg ring-2 ring-white/30" onclick="goToSlide(0)"></button>
+                <button class="w-3 h-3 rounded-full bg-white/50 transition-all duration-300 hover:scale-125 slider-dot shadow-lg hover:bg-white/80" onclick="goToSlide(1)"></button>
+                <button class="w-3 h-3 rounded-full bg-white/50 transition-all duration-300 hover:scale-125 slider-dot shadow-lg hover:bg-white/80" onclick="goToSlide(2)"></button>
+                {% endif %}
+            </div>
+        </div>
+
+        <script>
+            let currentSlide = 0;
+            const slides = document.querySelectorAll('.slide-item');
+            const dots = document.querySelectorAll('.slider-dot');
+            const totalSlides = slides.length;
+            let slideInterval;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    const img = slide.querySelector('.slide-img');
+                    const title = slide.querySelector('.slide-title');
+                    const desc = slide.querySelector('.slide-desc');
+                    
+                    if (i === index) {
+                        slide.classList.remove('opacity-0');
+                        slide.classList.add('opacity-100', 'z-10');
+                        // Depth effect: Zoom in
+                        img.classList.remove('scale-100');
+                        img.classList.add('scale-110');
+                        
+                        // Text Animation In
+                        if(title) {
+                             title.classList.remove('opacity-0', 'translate-y-4');
+                             title.classList.add('opacity-100', 'translate-y-0');
+                        }
+                        if(desc) {
+                             desc.classList.remove('opacity-0', 'translate-y-4');
+                             desc.classList.add('opacity-100', 'translate-y-0');
+                        }
+                    } else {
+                        slide.classList.remove('opacity-100', 'z-10');
+                        slide.classList.add('opacity-0');
+                        // Reset zoom
+                        img.classList.remove('scale-110');
+                        img.classList.add('scale-100');
+                        
+                        // Text Animation Out
+                        if(title) {
+                             title.classList.remove('opacity-100', 'translate-y-0');
+                             title.classList.add('opacity-0', 'translate-y-4');
+                        }
+                        if(desc) {
+                             desc.classList.remove('opacity-100', 'translate-y-0');
+                             desc.classList.add('opacity-0', 'translate-y-4');
+                        }
+                    }
+                });
+                
+                dots.forEach((dot, i) => {
+                    if (i === index) {
+                        dot.classList.remove('bg-white/50');
+                        dot.classList.add('bg-white');
+                    } else {
+                        dot.classList.remove('bg-white');
+                        dot.classList.add('bg-white/50');
+                    }
+                });
+                
+                currentSlide = index;
+            }
+
+            function nextSlide() {
+                let next = (currentSlide + 1) % totalSlides;
+                showSlide(next);
+                resetTimer();
+            }
+
+            function prevSlide() {
+                let prev = (currentSlide - 1 + totalSlides) % totalSlides;
+                showSlide(prev);
+                resetTimer();
+            }
+
+            function resetTimer() {
+                if(slideInterval) clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+
+            function goToSlide(index) {
+                showSlide(index);
+                resetTimer();
+            }
+
+            // Initialize
+            resetTimer();
+        </script>
+    </div>
+</section>
+
+<!-- Categories (Pill Shaped) -->
+<section id="kategoriler" class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-display font-bold text-on-surface">Kategorilere Göz At</h2>
+            <div class="flex gap-2">
+                <button class="p-2 rounded-full hover:bg-surface-container-highest transition-colors">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <button class="p-2 rounded-full hover:bg-surface-container-highest transition-colors">
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide justify-center">
+            {% for kategori in kategoriler %}
+            <a href="/kategori/{{ kategori.id }}" class="flex-shrink-0 group">
+                <div class="flex items-center gap-3 pl-2 pr-6 py-2 rounded-full bg-surface-container hover:bg-primary-container hover:text-on-primary-container transition-all duration-300 border border-transparent hover:border-primary/10">
+                    <div class="w-10 h-10 rounded-full bg-surface-bright flex items-center justify-center shadow-sm overflow-hidden group-hover:scale-110 transition-transform p-1">
+                        {% if kategori.resim_url %}
+                            <img src="{{ kategori.resim_url }}" alt="{{ kategori.ad }}" class="w-full h-full rounded-full object-cover">
+                        {% else %}
+                            <span class="text-xl">{{ ['🧴', '💊', '🌿', '✨'][loop.index0 % 4] }}</span>
+                        {% endif %}
+                    </div>
+                    <span class="font-medium whitespace-nowrap">{{ kategori.ad }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Grid -->
+<section class="py-16 bg-surface-bright">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h2 class="text-3xl md:text-4xl font-display font-bold text-on-surface mb-4">Öne Çıkanlar</h2>
+            <p class="text-on-surface-variant">En çok tercih edilen premium ürünlerimizi keşfedin.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for urun in urunler[:4] %}
+            <div class="group flex flex-col bg-surface rounded-2xl p-3 hover:shadow-md3-3 transition-all duration-300 border border-transparent hover:border-outline-variant/20">
+                <!-- Image Container -->
+                <div class="relative aspect-[4/5] rounded-xl overflow-hidden bg-surface-container mb-4">
+                    <img src="{{ urun.resim_url or 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=1887&auto=format&fit=crop' }}" 
+                         alt="{{ urun.ad }}" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    
+                    <!-- Floating Actions -->
+                    <div class="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-x-4 group-hover:translate-x-0">
+                        <button class="w-10 h-10 rounded-full bg-surface/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-primary hover:text-on-primary text-on-surface transition-colors">
+                            <span class="material-symbols-outlined text-[20px]">favorite</span>
+                        </button>
+                        <button class="w-10 h-10 rounded-full bg-surface/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-primary hover:text-on-primary text-on-surface transition-colors">
+                            <span class="material-symbols-outlined text-[20px]">visibility</span>
+                        </button>
+                    </div>
+
+                    {% if urun.indirimli_fiyat %}
+                    <div class="absolute top-3 left-3 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold">
+                        %{{ ((urun.fiyat - urun.indirimli_fiyat) / urun.fiyat * 100) | int }} İndirim
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Content -->
+                <div class="px-2 pb-2 flex-1 flex flex-col">
+                    <h3 class="font-display font-semibold text-lg text-on-surface mb-1 group-hover:text-primary transition-colors">
+                        <a href="/urun/{{ urun.id }}">{{ urun.ad }}</a>
+                    </h3>
+                    <p class="text-sm text-on-surface-variant line-clamp-2 mb-4">{{ urun.aciklama }}</p>
+                    
+                    <div class="mt-auto flex items-center justify-between">
+                        <div class="flex flex-col">
+                            {% if urun.indirimli_fiyat %}
+                                <span class="text-xs text-on-surface-variant line-through">{{ urun.fiyat }} ₺</span>
+                                <span class="text-xl font-bold text-primary">{{ urun.indirimli_fiyat }} ₺</span>
+                            {% else %}
+                                <span class="text-xl font-bold text-on-surface">{{ urun.fiyat }} ₺</span>
+                            {% endif %}
+                        </div>
+                        
+                        <form action="/api/sepet/1/ekle" method="POST">
+                            <input type="hidden" name="urun_id" value="{{ urun.id }}">
+                            <input type="hidden" name="adet" value="1">
+                            <button type="submit" class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-md3-1 hover:shadow-md3-2 hover:scale-110 transition-all active:scale-95">
+                                <span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-16 text-center">
+            <a href="/urunler" class="btn-outlined inline-flex items-center gap-2">
+                Tüm Ürünleri Gör
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features / Trust -->
+<section class="py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-surface-container rounded-3xl p-8 text-center hover:bg-primary-container/30 transition-colors duration-300">
+                <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl">verified</span>
+                </div>
+                <h3 class="text-xl font-display font-bold mb-3">Orijinal Ürünler</h3>
+                <p class="text-on-surface-variant">Tüm ürünlerimiz %100 orijinal ve sertifikalıdır. Kaliteden ödün vermiyoruz.</p>
+            </div>
+            <div class="bg-surface-container rounded-3xl p-8 text-center hover:bg-primary-container/30 transition-colors duration-300">
+                <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl">local_shipping</span>
+                </div>
+                <h3 class="text-xl font-display font-bold mb-3">Hızlı Teslimat</h3>
+                <p class="text-on-surface-variant">Siparişleriniz özenle paketlenir ve en kısa sürede kapınıza teslim edilir.</p>
+            </div>
+            <div class="bg-surface-container rounded-3xl p-8 text-center hover:bg-primary-container/30 transition-colors duration-300">
+                <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl">support_agent</span>
+                </div>
+                <h3 class="text-xl font-display font-bold mb-3">7/24 Destek</h3>
+                <p class="text-on-surface-variant">Uzman ekibimiz her türlü sorunuz için size yardımcı olmaya hazır.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

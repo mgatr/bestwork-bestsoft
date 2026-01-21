@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-surface py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-[url('/static/bg-pattern.png')] opacity-5"></div>
+    </div>
+
+    <div class="max-w-lg w-full space-y-8 bg-surface-container p-10 rounded-2xl shadow-md3-3 relative z-10 border border-outline-variant/20">
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 bg-primary-container rounded-full flex items-center justify-center mb-6">
+                <span class="material-symbols-outlined text-on-primary-container text-3xl">person_search</span>
+            </div>
+            <h2 class="text-2xl font-bold text-on-surface mb-2">Sponsor Kontrolü</h2>
+            <p class="text-on-surface-variant">Kayıt işlemine devam etmek için sponsor numaranızı giriniz.</p>
+        </div>
+        
+        <div class="space-y-6">
+            <div class="rounded-md shadow-sm">
+                <label for="sponsor_no" class="sr-only">Sponsor Numarası</label>
+                <div class="flex gap-2">
+                    <input id="sponsor_no" name="sponsor_no" type="text" required 
+                        class="appearance-none rounded-lg relative block w-full px-4 py-3 border border-outline bg-surface text-on-surface placeholder-on-surface-variant/70 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-all" 
+                        placeholder="Referans Numaranızı Girin">
+                    <button type="button" onclick="sponsorKontrol()" 
+                        class="group relative flex justify-center py-3 px-6 border border-transparent text-sm font-medium rounded-lg text-on-primary bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200 shadow-sm">
+                        Ara
+                    </button>
+                </div>
+            </div>
+
+            <div id="sponsor-sonuc" class="hidden p-4 text-sm rounded-lg transition-all duration-300 border" role="alert">
+                <!-- Sonuç mesajı buraya gelecek -->
+            </div>
+
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-outline-variant"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-surface-container text-on-surface-variant">veya</span>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" onclick="window.location.href='/kayit-form'" 
+                    class="group relative w-full flex justify-center py-3 px-4 border border-outline text-sm font-medium rounded-lg text-primary bg-transparent hover:bg-primary-container/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200 uppercase tracking-wider">
+                    SPONSORUM YOK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+async function sponsorKontrol() {
+    const sponsorNo = document.getElementById('sponsor_no').value;
+    const sonucDiv = document.getElementById('sponsor-sonuc');
+    
+    if (!sponsorNo) {
+        sonucDiv.classList.remove('hidden');
+        sonucDiv.className = 'p-4 mb-4 text-sm text-on-error-container bg-error-container border-error/20 rounded-lg';
+        sonucDiv.innerHTML = '<div class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">error</span>Lütfen bir sponsor numarası girin.</div>';
+        return;
+    }
+
+    // Loading durumu
+    sonucDiv.classList.remove('hidden');
+    sonucDiv.className = 'p-4 mb-4 text-sm text-on-secondary-container bg-secondary-container border-secondary/20 rounded-lg';
+    sonucDiv.innerHTML = '<div class="flex items-center gap-2"><span class="material-symbols-outlined text-lg animate-spin">sync</span>Kontrol ediliyor...</div>';
+
+    try {
+        const response = await fetch(`/api/sponsor-kontrol/${sponsorNo}`);
+        const data = await response.json();
+        
+        if (data.valid) {
+            sonucDiv.className = 'p-4 mb-4 text-sm text-on-tertiary-container bg-tertiary-container border-tertiary/20 rounded-lg';
+            sonucDiv.innerHTML = `<div class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">check_circle</span>Sponsor Bulundu: <strong>${data.ad_soyad}</strong>. Yönlendiriliyorsunuz...</div>`;
+            setTimeout(() => {
+                window.location.href = `/kayit-form?ref=${sponsorNo}`;
+            }, 1500);
+        } else {
+            sonucDiv.className = 'p-4 mb-4 text-sm text-on-error-container bg-error-container border-error/20 rounded-lg';
+            sonucDiv.innerHTML = '<div class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">error</span>Sponsor bulunamadı! Lütfen numarayı kontrol edin.</div>';
+        }
+    } catch (error) {
+        console.error('Hata:', error);
+        sonucDiv.className = 'p-4 mb-4 text-sm text-on-error-container bg-error-container border-error/20 rounded-lg';
+        sonucDiv.innerHTML = '<div class="flex items-center gap-2"><span class="material-symbols-outlined text-lg">error</span>Bir hata oluştu. Lütfen tekrar deneyin.</div>';
+    }
+}
+
+// Enter tuşu ile arama yapma
+document.getElementById('sponsor_no').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        sponsorKontrol();
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLM Ayarları - BestSoft</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <a href="/admin/ayarlar" class="text-blue-600 hover:underline mb-2 inline-block">← Ayarlara Dön</a>
+            <h1 class="text-4xl font-bold text-gray-900">MLM Genel Ayarları</h1>
+            <p class="text-gray-600 mt-2">Network marketing sisteminin temel ayarlarını yönetin</p>
+        </div>
+
+        <!-- Başarı Mesajı -->
+        {% if request.query_params.get('basari') %}
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+            ✓ Ayarlar başarıyla güncellendi!
+        </div>
+        {% endif %}
+
+        <!-- Form -->
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+            <form method="POST" action="/admin/mlm/ayarlar/guncelle" class="space-y-6">
+
+                <!-- Referans Bonusu -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="material-symbols-outlined text-green-600 inline align-middle">card_giftcard</span>
+                        Referans Bonusu (CV)
+                    </label>
+                    <input type="number" step="0.01" name="referans_bonusu"
+                           value="{{ ayarlar.referans_bonusu.deger }}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <p class="text-sm text-gray-500 mt-1">Sponsor'a yeni üye kaydında ödenecek bonus miktarı</p>
+                </div>
+
+                <!-- Hoşgeldin Bonusu -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="material-symbols-outlined text-purple-600 inline align-middle">celebration</span>
+                        Hoşgeldin Bonusu (CV)
+                    </label>
+                    <input type="number" step="0.01" name="hosgeldin_bonusu"
+                           value="{{ ayarlar.hosgeldin_bonusu.deger }}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <p class="text-sm text-gray-500 mt-1">Yeni üyeye kayıt sırasında verilecek bonus</p>
+                </div>
+
+                <!-- Kayıt PV -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="material-symbols-outlined text-blue-600 inline align-middle">stars</span>
+                        Kayıt PV Değeri
+                    </label>
+                    <input type="number" step="0.01" name="kayit_pv"
+                           value="{{ ayarlar.kayit_pv.deger }}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <p class="text-sm text-gray-500 mt-1">Yeni üye kaydında sponsor'un koluna eklenecek PV</p>
+                </div>
+
+                <!-- Kayıt CV -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="material-symbols-outlined text-amber-600 inline align-middle">account_balance_wallet</span>
+                        Kayıt CV Değeri
+                    </label>
+                    <input type="number" step="0.01" name="kayit_cv"
+                           value="{{ ayarlar.kayit_cv.deger }}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <p class="text-sm text-gray-500 mt-1">Yeni üye kaydında kazanç değeri</p>
+                </div>
+
+                <!-- Kaydet Butonu -->
+                <div class="pt-4">
+                    <button type="submit"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">save</span>
+                        Ayarları Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

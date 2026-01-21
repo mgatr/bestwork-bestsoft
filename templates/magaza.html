@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8 text-sm text-on-surface-variant">
+        <a href="/" class="hover:text-primary transition-colors">Anasayfa</a>
+        <span class="mx-2">/</span>
+        <span class="font-medium text-on-surface">Mağaza</span>
+    </nav>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar -->
+        <aside class="w-full lg:w-64 flex-shrink-0 space-y-8">
+            <!-- Quick Shop Button -->
+            <button class="w-full bg-tertiary-container hover:bg-tertiary-container/80 text-on-tertiary-container font-bold py-3 px-4 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2">
+                Hızlı Alışveriş
+            </button>
+
+            <!-- Categories -->
+            <div>
+                <h3 class="font-bold text-lg mb-4 text-on-surface">Kategori</h3>
+                <div class="space-y-3">
+                    {% for kat in kategoriler %}
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" value="{{ kat.id }}" class="category-filter peer h-5 w-5 rounded border-outline text-primary focus:ring-primary/20 transition-all">
+                        </div>
+                        <span class="text-on-surface-variant group-hover:text-primary transition-colors">{{ kat.ad }}</span>
+                        <span class="ml-auto text-sm text-on-surface-variant/70">({{ kat.urun_sayisi if kat.urun_sayisi else 0 }})</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1">
+            <h1 class="text-2xl font-bold text-on-surface mb-6">Ürünler</h1>
+
+            <!-- Product Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {% for urun in urunler %}
+                <div class="product-card group bg-surface-bright rounded-xl p-4 hover:shadow-md transition-all duration-300 relative border border-transparent hover:border-outline-variant/20" data-category-id="{{ urun.kategori_id }}">
+                    <!-- Badges -->
+                    <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
+                        {% if urun.indirimli_fiyat %}
+                        <span class="bg-primary text-on-primary text-xs font-bold px-2 py-1 rounded">Popüler</span>
+                        {% endif %}
+                    </div>
+                    <div class="absolute top-4 right-4 z-10 flex flex-col items-end gap-1">
+                        <span class="bg-inverse-surface text-inverse-on-surface text-xs font-bold px-2 py-1 rounded">#{{ '%03d' % urun.id }}</span>
+                        <div class="bg-inverse-surface text-inverse-on-surface text-xs font-bold px-2 py-1 rounded text-center">
+                            {{ "%.3f"|format(urun.pv_degeri/1000) if urun.pv_degeri else '0.000' }} CC
+                        </div>
+                    </div>
+
+                    <!-- Image -->
+                    <div class="aspect-square mb-4 overflow-hidden rounded-lg bg-surface-container-lowest flex items-center justify-center p-4">
+                        <a href="/urun/{{ urun.id }}" class="w-full h-full flex items-center justify-center">
+                            <img src="{{ urun.resim_url or 'https://via.placeholder.com/300' }}" alt="{{ urun.ad }}" class="object-contain max-w-full max-h-full group-hover:scale-105 transition-transform duration-300">
+                        </a>
+                    </div>
+
+                    <!-- Info -->
+                    <div>
+                        <h3 class="font-medium text-on-surface mb-2 line-clamp-2 min-h-[3rem] text-sm">
+                            <a href="/urun/{{ urun.id }}">{{ urun.ad }}</a>
+                        </h3>
+                        <div class="font-bold text-on-surface">
+                            {{ "%.2f"|format(urun.fiyat) }} ₺
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Load More -->
+            <div class="mt-12 flex justify-center">
+                <button class="bg-primary text-on-primary px-8 py-3 rounded hover:bg-primary/90 transition-colors font-medium">
+                    Daha Fazla Yükle
+                </button>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('.category-filter');
+        const products = document.querySelectorAll('.product-card');
+
+        function filterProducts() {
+            // Seçili kategorilerin ID'lerini al
+            const selectedCategories = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            products.forEach(product => {
+                const productCategoryId = product.getAttribute('data-category-id');
+                
+                // Eğer hiç kategori seçilmediyse veya ürün seçili kategorilerden birindeyse göster
+                if (selectedCategories.length === 0 || selectedCategories.includes(productCategoryId)) {
+                    product.style.display = ''; // Varsayılan görünüm (flex/block neyse)
+                } else {
+                    product.style.display = 'none'; // Gizle
+                }
+            });
+        }
+
+        // Her checkbox değiştiğinde filtrele
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', filterProducts);
+        });
+    });
+</script>
+{% endblock %}

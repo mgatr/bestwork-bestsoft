@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BestSoft Dashboard - M3</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-3': '0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        
+        <!-- Welcome Greeting -->
+        <div class="mb-8">
+            <h1 class="text-[32px] md:text-[36px] font-normal text-md-onSurface">Hoşgeldin, Admin 👋</h1>
+        </div>
+
+        <!-- Content Area -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- İletişim Kartı -->
+            <a href="/admin/iletisim" class="block group">
+                <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 shadow-sm hover:shadow-elevation-2 transition-all relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-md-primaryContainer/30 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                    
+                    <div class="flex items-start justify-between mb-4 relative z-10">
+                        <div class="w-12 h-12 bg-md-primaryContainer text-md-onPrimaryContainer rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-[24px]">mail</span>
+                        </div>
+                        {% if bekleyen_mesaj_sayisi > 0 %}
+                        <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
+                            {{ bekleyen_mesaj_sayisi }} Yeni
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <h3 class="text-md-onSurfaceVariant text-sm font-medium mb-1">İletişim Mesajları</h3>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-normal text-md-onSurface">{{ toplam_mesaj_sayisi }}</span>
+                            <span class="text-xs text-md-onSurfaceVariant">Toplam</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Ürünler Kartı -->
+            <a href="/admin/urunler" class="block group">
+                <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 shadow-sm hover:shadow-elevation-2 transition-all relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-md-secondaryContainer/30 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                    
+                    <div class="flex items-start justify-between mb-4 relative z-10">
+                        <div class="w-12 h-12 bg-md-secondaryContainer text-md-onSecondaryContainer rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-[24px]">inventory_2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <h3 class="text-md-onSurfaceVariant text-sm font-medium mb-1">Toplam Ürün</h3>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-normal text-md-onSurface">{{ toplam_urun_sayisi }}</span>
+                            <span class="text-xs text-md-onSurfaceVariant">Aktif</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+             <!-- Kategoriler Kartı -->
+             <a href="/admin/kategoriler" class="block group">
+                <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 shadow-sm hover:shadow-elevation-2 transition-all relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-md-tertiaryContainer/30 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                    
+                    <div class="flex items-start justify-between mb-4 relative z-10">
+                        <div class="w-12 h-12 bg-md-tertiaryContainer text-md-onTertiaryContainer rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-[24px]">category</span>
+                        </div>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <h3 class="text-md-onSurfaceVariant text-sm font-medium mb-1">Kategoriler</h3>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-normal text-md-onSurface">{{ toplam_kategori_sayisi }}</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Güncelleme Kartı (Place Holder) -->
+            <a href="/admin/ayarlar/guncelleme" class="block group">
+                 <div class="bg-md-surface rounded-[24px] p-6 border border-md-outlineVariant/20 shadow-sm hover:shadow-elevation-2 transition-all relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-green-100/50 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                    
+                    <div class="flex items-start justify-between mb-4 relative z-10">
+                        <div class="w-12 h-12 bg-green-100 text-green-700 rounded-xl flex items-center justify-center">
+                            <span class="material-symbols-outlined text-[24px]">system_update</span>
+                        </div>
+                    </div>
+                    
+                    <div class="relative z-10">
+                        <h3 class="text-md-onSurfaceVariant text-sm font-medium mb-1">Sistem Durumu</h3>
+                         <div class="flex items-baseline gap-2">
+                            <span class="text-lg font-normal text-md-onSurface">Kontrol Et</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<!-- Breadcrumb & Header -->
+<div class="bg-surface-container-low py-3 px-4 sm:px-6 lg:px-8 border-b border-outline-variant mb-6">
+    <div class="max-w-7xl mx-auto flex items-center text-sm text-on-surface-variant">
+        <a href="/" class="hover:text-primary font-medium">ANASAYFA</a>
+        <span class="mx-2 text-outline">/</span>
+        <span class="text-on-surface font-medium">Kariyer Basamakları</span>
+    </div>
+</div>
+
+<div class="max-w-[95%] mx-auto mt-8 px-4 pb-20">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-outline-variant pb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-on-surface">Kariyer Yolculuğu</h1>
+            <p class="mt-2 text-on-surface-variant">Hedeflerinize ulaşmak için ilerlemenizi takip edin.</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-tertiary-container text-on-tertiary-container rounded-lg border border-tertiary/20">
+                <span class="material-symbols-outlined">workspace_premium</span>
+                <span class="font-semibold">Mevcut: {{ current_user.rutbe }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for kariyer in kariyer_durumu %}
+            {# Renk Ayarları #}
+            {% set colors = {
+                'border': 'border-gray-200 dark:border-gray-700', 
+                'shadow': 'shadow-gray-100 dark:shadow-none', 
+                'ring': 'ring-gray-100 dark:ring-gray-700', 
+                'bg_soft': 'bg-gray-50 dark:bg-gray-800/50', 
+                'text': 'text-gray-500 dark:text-gray-400', 
+                'icon_bg': 'from-gray-400 to-gray-600', 
+                'bar': 'bg-gray-500'
+            } %}
+            
+            {% if "Platinum" in kariyer.ad %}
+                {% set colors = {
+                    'border': 'border-slate-400 dark:border-slate-600', 
+                    'shadow': 'shadow-slate-100 dark:shadow-none', 
+                    'ring': 'ring-slate-100 dark:ring-slate-800', 
+                    'bg_soft': 'bg-slate-50 dark:bg-slate-900/50', 
+                    'text': 'text-slate-500 dark:text-slate-400', 
+                    'icon_bg': 'from-slate-400 to-slate-600', 
+                    'bar': 'bg-slate-500'
+                } %}
+            {% elif "Pearl" in kariyer.ad %}
+                {% set colors = {
+                    'border': 'border-rose-300 dark:border-rose-700', 
+                    'shadow': 'shadow-rose-100 dark:shadow-none', 
+                    'ring': 'ring-rose-100 dark:ring-rose-900', 
+                    'bg_soft': 'bg-rose-50 dark:bg-rose-900/30', 
+                    'text': 'text-rose-500 dark:text-rose-400', 
+                    'icon_bg': 'from-rose-300 to-rose-500', 
+                    'bar': 'bg-rose-400'
+                } %}
+            {% elif "Sapphire" in kariyer.ad %}
+                {% set colors = {
+                    'border': 'border-blue-400 dark:border-blue-700', 
+                    'shadow': 'shadow-blue-100 dark:shadow-none', 
+                    'ring': 'ring-blue-100 dark:ring-blue-900', 
+                    'bg_soft': 'bg-blue-50 dark:bg-blue-900/30', 
+                    'text': 'text-blue-600 dark:text-blue-400', 
+                    'icon_bg': 'from-blue-500 to-blue-700', 
+                    'bar': 'bg-blue-600'
+                } %}
+            {% elif "Ruby" in kariyer.ad %}
+                {% set colors = {
+                    'border': 'border-red-400 dark:border-red-700', 
+                    'shadow': 'shadow-red-100 dark:shadow-none', 
+                    'ring': 'ring-red-100 dark:ring-red-900', 
+                    'bg_soft': 'bg-red-50 dark:bg-red-900/30', 
+                    'text': 'text-red-600 dark:text-red-400', 
+                    'icon_bg': 'from-red-500 to-red-700', 
+                    'bar': 'bg-red-600'
+                } %}
+            {% elif "Emerald" in kariyer.ad %}
+                {% set colors = {
+                    'border': 'border-emerald-400 dark:border-emerald-700', 
+                    'shadow': 'shadow-emerald-100 dark:shadow-none', 
+                    'ring': 'ring-emerald-100 dark:ring-emerald-900', 
+                    'bg_soft': 'bg-emerald-50 dark:bg-emerald-900/30', 
+                    'text': 'text-emerald-600 dark:text-emerald-400', 
+                    'icon_bg': 'from-emerald-400 to-emerald-600', 
+                    'bar': 'bg-emerald-500'
+                } %}
+            {% elif "Diamond" in kariyer.ad %}
+                {% set colors = {
+                    'border': 'border-cyan-400 dark:border-cyan-700', 
+                    'shadow': 'shadow-cyan-100 dark:shadow-none', 
+                    'ring': 'ring-cyan-100 dark:ring-cyan-900', 
+                    'bg_soft': 'bg-cyan-50 dark:bg-cyan-900/30', 
+                    'text': 'text-cyan-600 dark:text-cyan-400', 
+                    'icon_bg': 'from-cyan-400 to-cyan-600', 
+                    'bar': 'bg-cyan-500'
+                } %}
+            {% elif "President" in kariyer.ad %}
+                {% set colors = {
+                    'border': 'border-purple-400 dark:border-purple-700', 
+                    'shadow': 'shadow-purple-100 dark:shadow-none', 
+                    'ring': 'ring-purple-100 dark:ring-purple-900', 
+                    'bg_soft': 'bg-purple-50 dark:bg-purple-900/30', 
+                    'text': 'text-purple-600 dark:text-purple-400', 
+                    'icon_bg': 'from-purple-500 to-purple-700', 
+                    'bar': 'bg-purple-600'
+                } %}
+            {% endif %}
+
+            <div class="relative group">
+                <!-- Connection Line (Desktop only, except last item) -->
+                {% if not loop.last %}
+                <div class="hidden xl:block absolute top-1/2 -right-9 w-12 h-1 bg-gray-200 dark:bg-outline-variant/30 z-0"></div>
+                {% endif %}
+
+                <div class="relative bg-white dark:bg-surface-container-low rounded-2xl p-6 h-full transition-all duration-300 z-10 border-2
+                    {{ colors.border }} {{ colors.shadow }}
+                    hover:shadow-xl hover:-translate-y-1
+                    {% if kariyer.aktif %}ring-4 {{ colors.ring }} scale-105{% endif %}
+                    {% if kariyer.tamamlandi %}{{ colors.bg_soft }}{% endif %}">
+                    
+                    <!-- Header: Icon & Status -->
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-md bg-gradient-to-br {{ colors.icon_bg }}">
+                            <span class="font-bold text-lg">{{ loop.index }}</span>
+                        </div>
+                        
+                        {% if kariyer.tamamlandi %}
+                            <span class="material-symbols-outlined text-emerald-500 text-2xl">check_circle</span>
+                        {% elif kariyer.aktif %}
+                            <span class="material-symbols-outlined {{ colors.text }} text-2xl animate-pulse">stars</span>
+                        {% else %}
+                            <span class="material-symbols-outlined text-gray-300 dark:text-gray-600 text-2xl">lock</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-lg font-bold text-gray-800 dark:text-on-surface mb-1">{{ kariyer.ad }}</h3>
+                    <p class="text-xs text-gray-500 dark:text-on-surface-variant mb-4 uppercase tracking-wider">
+                        {% if kariyer.tamamlandi %}Tamamlandı{% elif kariyer.aktif %}Mevcut Seviye{% else %}Kilitli{% endif %}
+                    </p>
+
+                    <!-- Progress Section -->
+                    {% if kariyer.hedef_sol > 0 %}
+                        <div class="space-y-3 bg-gray-50 dark:bg-surface-container-high p-3 rounded-xl">
+                            <!-- Left Arm -->
+                            <div>
+                                <div class="flex justify-between text-[10px] text-gray-500 dark:text-gray-400 mb-1">
+                                    <span>SOL KOL</span>
+                                    <span>{{ kariyer.sol_yuzde }}%</span>
+                                </div>
+                                <div class="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="h-full {{ colors.bar }} rounded-full" style="width: {{ kariyer.sol_yuzde }}%"></div>
+                                </div>
+                                <div class="text-[10px] text-right text-gray-400 dark:text-gray-500 mt-0.5">{{ format_number(kariyer.mevcut_sol) }} PV / {{ format_number(kariyer.hedef_sol) }} PV</div>
+                            </div>
+
+                            <!-- Right Arm -->
+                            <div>
+                                <div class="flex justify-between text-[10px] text-gray-500 dark:text-gray-400 mb-1">
+                                    <span>SAĞ KOL</span>
+                                    <span>{{ kariyer.sag_yuzde }}%</span>
+                                </div>
+                                <div class="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="h-full {{ colors.bar }} rounded-full" style="width: {{ kariyer.sag_yuzde }}%"></div>
+                                </div>
+                                <div class="text-[10px] text-right text-gray-400 dark:text-gray-500 mt-0.5">{{ format_number(kariyer.mevcut_sag) }} PV / {{ format_number(kariyer.hedef_sag) }} PV</div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="{{ colors.bg_soft }} p-3 rounded-xl border {{ colors.border }}">
+                            <p class="text-xs {{ colors.text }} flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">verified</span>
+                                Başlangıç Seviyesi
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<!-- Breadcrumb & Header -->
+<div class="bg-surface-container-low py-3 px-4 sm:px-6 lg:px-8 border-b border-outline-variant mb-6">
+    <div class="max-w-7xl mx-auto flex items-center text-sm text-on-surface-variant">
+        <a href="/" class="hover:text-primary font-medium">ANASAYFA</a>
+        <span class="mx-2 text-outline">/</span>
+        <span class="text-on-surface font-medium">Sponsor Olduklarım</span>
+    </div>
+</div>
+
+<div class="max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+    <div class="bg-surface rounded-lg shadow-sm border border-outline-variant overflow-hidden">
+        
+        <!-- Controls -->
+        <div class="p-4 border-b border-outline-variant flex flex-col sm:flex-row justify-between items-center gap-4 bg-surface-container-lowest">
+            <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                <span>Sayfada</span>
+                <select id="entriesPerPage" class="form-select py-1 px-2 border border-outline rounded text-sm focus:ring-primary focus:border-primary bg-surface text-on-surface">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <span>Kayıt Göster</span>
+            </div>
+            
+            <div class="flex items-center gap-2 text-sm text-on-surface-variant w-full sm:w-auto">
+                <span>Bul:</span>
+                <input type="text" id="searchInput" class="form-input py-1 px-3 border border-outline rounded text-sm focus:ring-primary focus:border-primary w-full sm:w-64 bg-surface text-on-surface" placeholder="">
+            </div>
+        </div>
+        
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-outline-variant" id="membersTable">
+                <thead class="bg-surface-container-low">
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider cursor-pointer hover:bg-surface-container group select-none" onclick="sortTable(0)">
+                            <div class="flex items-center justify-between">
+                                Üye No
+                                <span class="material-symbols-outlined text-[16px] text-outline group-hover:text-on-surface">unfold_more</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider cursor-pointer hover:bg-surface-container group select-none" onclick="sortTable(1)">
+                            <div class="flex items-center justify-between">
+                                Adı Soyadı
+                                <span class="material-symbols-outlined text-[16px] text-outline group-hover:text-on-surface">unfold_more</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider cursor-pointer hover:bg-surface-container group select-none" onclick="sortTable(2)">
+                            <div class="flex items-center justify-between">
+                                E-posta
+                                <span class="material-symbols-outlined text-[16px] text-outline group-hover:text-on-surface">unfold_more</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider cursor-pointer hover:bg-surface-container group select-none" onclick="sortTable(3)">
+                            <div class="flex items-center justify-between">
+                                GSM
+                                <span class="material-symbols-outlined text-[16px] text-outline group-hover:text-on-surface">unfold_more</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider cursor-pointer hover:bg-surface-container group select-none" onclick="sortTable(4)">
+                            <div class="flex items-center justify-between">
+                                Kayıt Tarihi
+                                <span class="material-symbols-outlined text-[16px] text-outline group-hover:text-on-surface">unfold_more</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider cursor-pointer hover:bg-surface-container group select-none" onclick="sortTable(5)">
+                            <div class="flex items-center justify-between">
+                                Aktiflik Tarihi
+                                <span class="material-symbols-outlined text-[16px] text-outline group-hover:text-on-surface">unfold_more</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider cursor-pointer hover:bg-surface-container group select-none" onclick="sortTable(6)">
+                            <div class="flex items-center justify-between">
+                                Ağaca Yerleşme Tarihi
+                                <span class="material-symbols-outlined text-[16px] text-outline group-hover:text-on-surface">unfold_more</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-bold text-on-surface uppercase tracking-wider cursor-pointer hover:bg-surface-container group select-none" onclick="sortTable(7)">
+                            <div class="flex items-center justify-between">
+                                PAKET
+                                <span class="material-symbols-outlined text-[16px] text-outline group-hover:text-on-surface">unfold_more</span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-surface divide-y divide-outline-variant text-sm text-on-surface-variant" id="tableBody">
+                    {% for uye in uyeler %}
+                    <tr class="hover:bg-surface-container transition-colors odd:bg-surface even:bg-surface-container-lowest">
+                        <td class="px-4 py-3 whitespace-nowrap font-medium text-on-surface">
+                            {{ uye.uye_no if uye.uye_no else uye.id }}
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            {{ uye.tam_ad }}
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            {{ uye.email }}
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            {{ uye.telefon }}
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            {{ uye.kayit_tarihi.strftime('%d.%m.%Y %H:%M') if uye.kayit_tarihi else '-' }}
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <!-- Aktiflik Tarihi Placeholder -->
+                            -
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <!-- Ağaca Yerleşme Tarihi: Eğer parent_id varsa kayıt tarihi ile aynı varsayalım şimdilik -->
+                            {{ uye.kayit_tarihi.strftime('%d.%m.%Y %H:%M') if uye.parent_id and uye.kayit_tarihi else '-' }}
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-semibold rounded bg-surface-container text-on-surface border border-outline-variant">
+                                {{ uye.rutbe if uye.rutbe else 'STARTER' }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="px-6 py-10 text-center text-on-surface-variant">
+                            Kayıt bulunamadı.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination Info (Static for now) -->
+        <div class="px-4 py-3 border-t border-outline-variant bg-surface-container-low flex items-center justify-between sm:px-6">
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-on-surface-variant">
+                        Toplam <span class="font-medium">{{ uyeler|length }}</span> kayıttan <span class="font-medium">1</span> - <span class="font-medium">{{ uyeler|length }}</span> arası gösteriliyor
+                    </p>
+                </div>
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-outline bg-surface text-sm font-medium text-on-surface-variant hover:bg-surface-container">
+                            <span class="sr-only">Önceki</span>
+                            <span class="material-symbols-outlined text-sm">chevron_left</span>
+                        </a>
+                        <a href="#" aria-current="page" class="z-10 bg-primary-container border-primary text-on-primary-container relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                            1
+                        </a>
+                        <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-outline bg-surface text-sm font-medium text-on-surface-variant hover:bg-surface-container">
+                            <span class="sr-only">Sonraki</span>
+                            <span class="material-symbols-outlined text-sm">chevron_right</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Basit Arama Fonksiyonu
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#tableBody tr');
+        
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            if(text.includes(filter)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    // Basit Sıralama Fonksiyonu
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("membersTable");
+        switching = true;
+        dir = "asc"; 
+        
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount ++;      
+            } else {
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

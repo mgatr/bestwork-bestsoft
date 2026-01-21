@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% if page_title %}{{ page_title }} - {% endif %}{% endblock %}{{ request.state.site_ayarlar.site_basligi if request.state.site_ayarlar else 'BestWork' }}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{{ request.state.site_ayarlar.seo_aciklama if request.state.site_ayarlar and request.state.site_ayarlar.seo_aciklama else 'BestWork E-Ticaret ve Network Marketing Sistemi' }}">
+    <meta name="keywords" content="{{ request.state.site_ayarlar.seo_anahtar_kelimeler if request.state.site_ayarlar and request.state.site_ayarlar.seo_anahtar_kelimeler else 'e-ticaret, network marketing, kazanç, alışveriş' }}">
+    <meta name="author" content="{{ request.state.site_ayarlar.seo_yazar if request.state.site_ayarlar and request.state.site_ayarlar.seo_yazar else 'BestSoft' }}">
+    
+    <!-- Google Analytics -->
+    {% if request.state.site_ayarlar and request.state.site_ayarlar.google_analytics_kodu %}
+        {{ request.state.site_ayarlar.google_analytics_kodu | safe }}
+    {% endif %}
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Premium Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+    
+    <style>
+        /* MD3 Color Tokens - Automatic Dark/Light Mode */
+        :root {
+            /* Light Mode Defaults */
+            --md-sys-color-primary: #6750A4;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #EADDFF;
+            --md-sys-color-on-primary-container: #21005D;
+            
+            --md-sys-color-secondary: #625B71;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-secondary-container: #E8DEF8;
+            --md-sys-color-on-secondary-container: #1D192B;
+            
+            --md-sys-color-tertiary: #7D5260;
+            --md-sys-color-on-tertiary: #FFFFFF;
+            --md-sys-color-tertiary-container: #FFD8E4;
+            --md-sys-color-on-tertiary-container: #31111D;
+            
+            --md-sys-color-error: #B3261E;
+            --md-sys-color-on-error: #FFFFFF;
+            --md-sys-color-error-container: #F9DEDC;
+            --md-sys-color-on-error-container: #410E0B;
+            
+            --md-sys-color-background: #FEF7FF;
+            --md-sys-color-on-background: #1D1B20;
+            
+            --md-sys-color-surface: #F6F2F7;
+            --md-sys-color-on-surface: #1D1B20;
+            --md-sys-color-surface-variant: #E7E0EC;
+            --md-sys-color-on-surface-variant: #49454F;
+            
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-outline-variant: #CAC4D0;
+            
+            --md-sys-color-surface-container-lowest: #FFFFFF;
+            --md-sys-color-surface-container-low: #F3EEF4;
+            --md-sys-color-surface-container: #EFEAF0;
+            --md-sys-color-surface-container-high: #E9E4EA;
+            --md-sys-color-surface-container-highest: #E3DEE4;
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Manual switch to prevent auto dark mode
+            theme: {
+                extend: {
+                    colors: {
+                        // Dynamic MD3 Palette using CSS Variables
+                        surface: {
+                            DEFAULT: 'var(--md-sys-color-surface)',
+                            dim: 'var(--md-sys-color-surface-container-low)',
+                            bright: 'var(--md-sys-color-surface-container-lowest)',
+                            container: 'var(--md-sys-color-surface-container)',
+                            'container-low': 'var(--md-sys-color-surface-container-low)',
+                            'container-high': 'var(--md-sys-color-surface-container-high)',
+                            'container-highest': 'var(--md-sys-color-surface-container-highest)',
+                        },
+                        primary: {
+                            DEFAULT: 'var(--md-sys-color-primary)',
+                            50: '#F6F2F7', // Keep static for specific shades if needed, or map to vars
+                            100: 'var(--md-sys-color-primary-container)',
+                            200: '#D0BCFF',
+                            300: '#B69DF8',
+                            400: '#9A82DB',
+                            500: '#7F67BE',
+                            600: 'var(--md-sys-color-primary)',
+                            700: '#4F378B',
+                            800: '#381E72',
+                            900: '#21005D',
+                            light: '#7F67BE',
+                            dark: '#4F378B',
+                            container: 'var(--md-sys-color-primary-container)',
+                            'on-container': 'var(--md-sys-color-on-primary-container)',
+                            'on-primary': 'var(--md-sys-color-on-primary)',
+                        },
+                        secondary: {
+                            DEFAULT: 'var(--md-sys-color-secondary)',
+                            container: 'var(--md-sys-color-secondary-container)',
+                            'on-container': 'var(--md-sys-color-on-secondary-container)',
+                            'on-secondary': 'var(--md-sys-color-on-secondary)',
+                        },
+                        tertiary: {
+                            DEFAULT: 'var(--md-sys-color-tertiary)',
+                            container: 'var(--md-sys-color-tertiary-container)',
+                            'on-container': 'var(--md-sys-color-on-tertiary-container)',
+                        },
+                        outline: {
+                            DEFAULT: 'var(--md-sys-color-outline)',
+                            variant: 'var(--md-sys-color-outline-variant)',
+                        },
+                        'on-surface': 'var(--md-sys-color-on-surface)',
+                        'on-surface-variant': 'var(--md-sys-color-on-surface-variant)',
+                        error: 'var(--md-sys-color-error)',
+                        success: '#2E7D32', // Keep static or map if needed
+                    },
+                    borderRadius: {
+                        'md3-xs': '4px',
+                        'md3-sm': '8px',
+                        'md3': '12px',
+                        'md3-lg': '16px',
+                        'md3-xl': '20px',
+                        'md3-2xl': '28px',
+                        'md3-3xl': '32px',
+                        'md3-full': '999px',
+                    },
+                    boxShadow: {
+                        'md3-1': '0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.30)',
+                        'md3-2': '0 2px 6px 2px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.30)',
+                    },
+                    fontFamily: {
+                        'display': ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+                        'body': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6, .font-display {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        /* Premium Surface Background */
+        body {
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* MD3 State Layers */
+        .state-layer {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .state-layer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: currentColor;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .state-layer:hover::before {
+            opacity: 0.08;
+        }
+        
+        .state-layer:active::before {
+            opacity: 0.12;
+        }
+        
+        /* MD3 Filled Button */
+        .btn-filled {
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            font-weight: 600;
+            padding: 0.625rem 1.5rem;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.08);
+        }
+        
+        .btn-filled:hover {
+            box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.12);
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+        
+        /* MD3 Outlined Button */
+        .btn-outlined {
+            border: 1px solid var(--md-sys-color-outline);
+            color: var(--md-sys-color-primary);
+            font-weight: 600;
+            padding: 0.625rem 1.5rem;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-outlined:hover {
+            background-color: var(--md-sys-color-surface-variant);
+            opacity: 0.8;
+        }
+        
+        /* MD3 Tonal Button */
+        .btn-tonal {
+            background-color: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+            font-weight: 600;
+            padding: 0.625rem 1.5rem;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-tonal:hover {
+            box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.08);
+            opacity: 0.9;
+        }
+        
+        /* MD3 Card Elevation */
+        .card-elevated {
+            background: var(--md-sys-color-surface-container-low);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.15), 0 1px 2px 0 rgba(0, 0, 0, 0.30);
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        
+        .card-elevated:hover {
+            box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+        }
+        
+        /* MD3 Filled Card */
+        .card-filled {
+            background: var(--md-sys-color-surface-container);
+            border-radius: 16px;
+            transition: all 0.2s ease;
+        }
+        
+        /* MD3 Outlined Card */
+        .card-outlined {
+            background: var(--md-sys-color-surface);
+            border: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 16px;
+            transition: all 0.2s ease;
+        }
+        
+        /* Premium Input */
+        .input-outlined {
+            border: 1px solid var(--md-sys-color-outline-variant);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            transition: all 0.2s ease;
+            background: var(--md-sys-color-surface-container-lowest);
+            color: var(--md-sys-color-on-surface);
+        }
+        
+        .input-outlined:focus {
+            outline: none;
+            border-color: var(--md-sys-color-primary);
+            box-shadow: 0 0 0 2px rgba(103, 80, 164, 0.1);
+        }
+        
+        /* Pill/Chip Style */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .chip-filled {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+        
+        .chip-outlined {
+            border: 1px solid var(--md-sys-color-outline-variant);
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        
+        /* Line clamp */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Premium Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
+        /* Glass Effect */
+        .glass {
+            background: var(--md-sys-color-surface-container-low);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--md-sys-color-outline-variant);
+        }
+        
+        /* Gradient Primary */
+        .gradient-primary {
+            background: linear-gradient(135deg, #6750A4 0%, #7F67BE 100%);
+        }
+
+        /* El Sallama Animasyonu (Waving) */
+        @keyframes wave {
+            0% { transform: rotate(0deg); }
+            10% { transform: rotate(14deg); }
+            20% { transform: rotate(-8deg); }
+            30% { transform: rotate(14deg); }
+            40% { transform: rotate(-4deg); }
+            50% { transform: rotate(10deg); }
+            60% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .animate-wave {
+            animation: wave 2s ease-in-out infinite;
+            transform-origin: 70% 70%;
+            display: inline-block;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body class="antialiased text-on-surface font-body">
+
+    <!-- Minimalist Header -->
+    <header class="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-md3-1 group-hover:shadow-md3-2 transition-all duration-300">
+                        <span class="material-symbols-outlined">diamond</span>
+                    </div>
+                    <span class="text-xl font-display font-bold text-on-surface tracking-tight">BestWork</span>
+                </a>
+                
+                <!-- Navigation Menu -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="/" class="flex items-center gap-2 text-sm font-medium text-on-surface hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">home</span>
+                        Anasayfa
+                    </a>
+                    <a href="/sertifikalar" class="flex items-center gap-2 text-sm font-medium text-on-surface hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">verified</span>
+                        Sertifikalar
+                    </a>
+                    <a href="/urunler" class="flex items-center gap-2 text-sm font-medium text-on-surface hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">storefront</span>
+                        E-Shop
+                    </a>
+                    <a href="/kurumsal" class="flex items-center gap-2 text-sm font-medium text-on-surface hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">business</span>
+                        Kurumsal
+                    </a>
+                    <a href="/iletisim" class="flex items-center gap-2 text-sm font-medium text-on-surface hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">contact_support</span>
+                        İletişim
+                    </a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2">
+                    {% if request.state.user %}
+                        <!-- Giriş Yapılmış Durum -->
+                        <a href="/panel/{{ request.state.user.id }}" class="flex items-center p-1 pr-4 rounded-full bg-surface-container-highest shadow-sm border border-outline-variant/20 hover:bg-surface-container-high transition-all duration-300 ease-out group">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center text-primary bg-primary/10 transition-colors shrink-0 overflow-hidden border border-primary/10 relative">
+                                {% if request.state.user.profil_resmi %}
+                                    <img id="headerProfileImage" src="{{ request.state.user.profil_resmi }}" 
+                                         alt="Profil" 
+                                         class="w-full h-full object-cover absolute inset-0 z-10"
+                                         onerror="this.style.display='none'; document.getElementById('headerProfileInitials').classList.remove('hidden');">
+                                {% endif %}
+                                <span id="headerProfileInitials" class="font-bold text-sm select-none {{ 'hidden' if request.state.user.profil_resmi else '' }}">
+                                    {{ request.state.user.tam_ad.split()[0][0] if request.state.user.tam_ad else '' }}{{ request.state.user.tam_ad.split()[-1][0] if request.state.user.tam_ad and request.state.user.tam_ad.split()|length > 1 else '' }}
+                                </span>
+                            </div>
+                            <div class="flex flex-col justify-center whitespace-nowrap pl-2">
+                                <span class="text-[10px] font-medium text-on-surface-variant uppercase tracking-wider leading-none mb-0.5">{{ request.state.user.tam_ad if request.state.user else 'Kullanıcı' }}</span>
+                                <span class="text-xs font-bold text-primary leading-none">Hesabım</span>
+                            </div>
+                        </a>
+                        
+                        <a href="/sepet/{{ request.state.user.id }}" class="relative p-3 rounded-full hover:bg-surface-container-highest transition-colors group">
+                            <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">shopping_cart</span>
+                            {% if request.state.cart_count and request.state.cart_count > 0 %}
+                            <span class="absolute top-1 right-1 min-w-[18px] h-[18px] flex items-center justify-center bg-red-600 text-white text-[10px] font-bold rounded-full border-2 border-surface px-1">
+                                {{ request.state.cart_count }}
+                            </span>
+                            {% endif %}
+                        </a>
+
+                        <a href="/cikis" class="p-3 rounded-full hover:bg-error/10 transition-colors group ml-2" title="Çıkış Yap">
+                            <span class="material-symbols-outlined text-error group-hover:text-red-700 transition-colors">logout</span>
+                        </a>
+                    {% else %}
+                        <!-- Giriş Yapılmamış Durum -->
+                        <a href="/giris" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-full hover:bg-surface-container-highest transition-colors text-sm font-medium text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px]">person</span>
+                            <span>Giriş Yap</span>
+                        </a>
+                        
+                        <a href="/sepet/1" class="relative p-3 rounded-full hover:bg-surface-container-highest transition-colors group">
+                            <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">shopping_cart</span>
+                            <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-red-600 rounded-full border-2 border-surface"></span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    </header>
+
+    {% if request.state.user and (request.url.path.startswith('/panel') or request.url.path.startswith('/sifre-degistir') or request.url.path.startswith('/varis-islemleri') or request.url.path.startswith('/career-tracking') or request.url.path.startswith('/banka-bilgileri') or request.url.path.startswith('/uyelik-bilgileri') or request.url.path.startswith('/prim-bilgileri') or request.url.path.startswith('/hizli-baslangic') or request.url.path.startswith('/referans-bonusu')) %}
+    <!-- User Control Bar -->
+    <section class="relative z-40 bg-surface-container border-b border-white/50 shadow-[inset_0_1px_4px_rgba(0,0,0,0.02)]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex flex-col lg:flex-row items-center justify-center py-2">
+                
+                <!-- Mobile Toggle -->
+                <button id="dashboard-mobile-toggle" class="lg:hidden w-full flex items-center justify-center gap-2 bg-surface-container-low border border-outline-variant/20 text-on-surface-variant px-4 py-2.5 rounded-xl font-medium text-sm shadow-sm transition-all active:scale-95 hover:bg-surface-container">
+                    <span class="material-symbols-outlined text-[20px]">widgets</span>
+                    <span>Yönetim Menüsü</span>
+                    <span class="material-symbols-outlined text-[18px] ml-auto">expand_more</span>
+                </button>
+
+                <!-- Desktop Links -->
+                <div id="dashboard-nav-links" class="hidden lg:flex items-center gap-2 text-sm font-medium text-on-surface-variant">
+                    
+                    <!-- Panel Home -->
+                    <a href="/panel/{{ request.state.user.id }}" class="group flex items-center gap-2 px-4 py-2 rounded-full hover:bg-surface-bright hover:text-primary hover:shadow-sm transition-all duration-300 border border-transparent hover:border-primary/10">
+                        <span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">dashboard</span>
+                        <span>Panel</span>
+                    </a>
+
+                    <div class="w-px h-6 bg-outline-variant/20 mx-2"></div>
+
+                    <!-- Dropdown: Kişisel -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-surface-bright hover:text-primary hover:shadow-sm transition-all duration-300 border border-transparent hover:border-primary/10">
+                            <span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">person</span>
+                            <span>Kişisel</span>
+                            <span class="material-symbols-outlined text-[18px] transition-transform duration-300 group-hover:rotate-180 text-on-surface-variant/50 group-hover:text-primary">expand_more</span>
+                        </button>
+                        
+                        <!-- Dropdown Menu (Gap Fixed) -->
+                        <div class="absolute top-full left-0 pt-2 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-left scale-95 group-hover:scale-100 z-50">
+                            <div class="bg-surface-container-low rounded-2xl shadow-md3-3 border border-outline-variant/10 overflow-hidden">
+                                <div class="p-1.5 space-y-0.5">
+                                    <div class="px-3 py-2 text-xs font-bold text-primary/50 uppercase tracking-wider">Hesap Ayarları</div>
+                                    <a href="/varis-islemleri" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+                                        Varis Bilgileri
+                                    </a>
+                                    <a href="/banka-bilgileri" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                                        Banka Bilgilerim
+                                    </a>
+                                    <a href="/uyelik-bilgileri" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">badge</span>
+                                        Üyelik Bilgilerim
+                                    </a>
+                                    <a href="/panel/sponsor-olduklarim" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">group_add</span>
+                                        Sponsor Olduklarım
+                                    </a>
+                                    <div class="h-px bg-outline-variant/10 my-1"></div>
+                                    <a href="/sifre-degistir" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-error/5 transition-colors text-on-surface-variant hover:text-error">
+                                        <span class="material-symbols-outlined text-[20px]">lock_reset</span>
+                                        Şifre Değiştir
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown: Bonuslar -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-surface-bright hover:text-primary hover:shadow-sm transition-all duration-300 border border-transparent hover:border-primary/10">
+                            <span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">payments</span>
+                            <span>Bonuslar</span>
+                            <span class="material-symbols-outlined text-[18px] transition-transform duration-300 group-hover:rotate-180 text-on-surface-variant/50 group-hover:text-primary">expand_more</span>
+                        </button>
+                        
+                        <!-- Dropdown Menu (Gap Fixed) -->
+                        <div class="absolute top-full left-0 pt-2 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-left scale-95 group-hover:scale-100 z-50">
+                            <div class="bg-surface-container-low rounded-2xl shadow-md3-3 border border-outline-variant/10 overflow-hidden">
+                                <div class="p-1.5 space-y-0.5">
+                                    <div class="px-3 py-2 text-xs font-bold text-primary/50 uppercase tracking-wider">Finansal</div>
+                                    <a href="/prim-bilgileri" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">insights</span>
+                                        Prim Detayları
+                                    </a>
+                                    <a href="/hizli-baslangic" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">rocket_launch</span>
+                                        Hızlı Başlangıç
+                                    </a>
+                                    <a href="/referans-bonusu" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">stars</span>
+                                        Referans Bonusu
+                                    </a>
+                                    <div class="h-px bg-outline-variant/10 my-1"></div>
+                                    <a href="/panel/agac/{{ request.state.user.id }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">account_tree</span>
+                                        Binary Ağacı
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-px h-6 bg-outline-variant/20 mx-2"></div>
+
+                    <!-- Destek -->
+                    <a href="/iletisim" class="group flex items-center gap-2 px-4 py-2 rounded-full hover:bg-surface-bright hover:text-primary hover:shadow-sm transition-all duration-300 border border-transparent hover:border-primary/10">
+                        <span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">support_agent</span>
+                        <span>Destek</span>
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Content -->
+                <div id="mobile-dashboard-menu" class="hidden w-full lg:hidden mt-3 bg-surface-container-low rounded-2xl border border-outline-variant/20 shadow-lg overflow-hidden animate-fade-in-up">
+                    <div class="p-2 space-y-1">
+                        <a href="/panel/{{ request.state.user.id }}" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container text-on-surface font-medium">
+                            <span class="material-symbols-outlined text-primary">dashboard</span>
+                            Panel
+                        </a>
+                        
+                        <div class="h-px bg-outline-variant/10 mx-2"></div>
+                        
+                        <div class="px-4 py-2 text-xs font-bold text-primary/50 uppercase tracking-wider">Kişisel</div>
+                        <a href="/varis-islemleri" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+                            Varis Bilgileri
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+                            Banka Bilgilerim
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px]">badge</span>
+                            Üyelik Bilgilerim
+                        </a>
+                        <a href="/sifre-degistir" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px]">lock_reset</span>
+                            Şifre Değiştir
+                        </a>
+                        
+                        <div class="h-px bg-outline-variant/10 mx-2"></div>
+                        
+                        <div class="px-4 py-2 text-xs font-bold text-primary/50 uppercase tracking-wider">Bonuslar</div>
+                        <a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px]">insights</span>
+                            Prim Detayları
+                        </a>
+                        <a href="/panel/agac/{{ request.state.user.id }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-surface-container text-on-surface-variant">
+                            <span class="material-symbols-outlined text-[20px]">account_tree</span>
+                            Binary Ağacı
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('dashboard-mobile-toggle')?.addEventListener('click', function() {
+            const menu = document.getElementById('mobile-dashboard-menu');
+            const icon = this.querySelector('.material-symbols-outlined:last-child');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+                this.classList.add('bg-surface-container-low', 'border-primary/30', 'text-primary');
+            } else {
+                menu.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+                this.classList.remove('bg-surface-container-low', 'border-primary/30', 'text-primary');
+            }
+        });
+    </script>
+    {% endif %}
+
+    <main class="mb-24">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-low pt-16 pb-8 mt-auto border-t border-outline-variant/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div class="space-y-4">
+                    <a href="/" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-md3-1">
+                            <span class="material-symbols-outlined">diamond</span>
+                        </div>
+                        <span class="text-xl font-display font-bold text-on-surface tracking-tight">{{ request.state.site_ayarlar.footer_baslik if request.state.site_ayarlar else 'BestWork' }}</span>
+                    </a>
+                    <p class="text-on-surface-variant text-sm leading-relaxed">
+                        {{ request.state.site_ayarlar.footer_aciklama if request.state.site_ayarlar else 'Premium alışveriş deneyimini yeniden tanımlıyoruz. Kalite, güven ve estetik bir arada.' }}
+                    </p>
+                    <div class="flex gap-4">
+                        <!-- Facebook -->
+                        <a href="{{ request.state.site_ayarlar.sosyal_facebook if request.state.site_ayarlar and request.state.site_ayarlar.sosyal_facebook else '#' }}" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-[#1877F2] hover:text-white transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.433-4.669 1.265 0 2.506.095 3.768.17v4.062h-2.585c-1.465 0-1.758.696-1.758 1.725v2.263h4.493l-.587 3.47h-3.906v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+
+                        <!-- LinkedIn -->
+                        {% if request.state.site_ayarlar and request.state.site_ayarlar.sosyal_linkedin %}
+                        <a href="{{ request.state.site_ayarlar.sosyal_linkedin }}" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-[#0077b5] hover:text-white transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        {% endif %}
+
+                        <!-- Twitter / X -->
+                        {% if request.state.site_ayarlar and request.state.site_ayarlar.sosyal_twitter %}
+                        <a href="{{ request.state.site_ayarlar.sosyal_twitter }}" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-black hover:text-white transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        {% endif %}
+
+                        <!-- Instagram -->
+                        {% if request.state.site_ayarlar and request.state.site_ayarlar.sosyal_instagram %}
+                        <a href="{{ request.state.site_ayarlar.sosyal_instagram }}" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-[#E1306C] hover:text-white transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        {% endif %}
+
+                        <!-- Youtube -->
+                        {% if request.state.site_ayarlar and request.state.site_ayarlar.sosyal_youtube %}
+                        <a href="{{ request.state.site_ayarlar.sosyal_youtube }}" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-[#FF0000] hover:text-white transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-md">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="font-display font-bold text-lg mb-6">Kurumsal</h4>
+                    <ul class="space-y-4 text-on-surface-variant">
+                        <li><a href="/kurumsal" class="hover:text-primary transition-colors">Hakkımızda</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Kariyer</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Sürdürülebilirlik</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Basın</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="font-display font-bold text-lg mb-6">Müşteri Hizmetleri</h4>
+                    <ul class="space-y-4 text-on-surface-variant">
+                        <li><a href="#" class="hover:text-primary transition-colors">İletişim</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Sıkça Sorulan Sorular</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Kargo ve İade</a></li>
+                        <li><a href="#" class="hover:text-primary transition-colors">Gizlilik Politikası</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info (Updatable) -->
+                <div>
+                    <h4 class="font-display font-bold text-lg mb-6">İletişim</h4>
+                    <div class="space-y-4 text-on-surface-variant text-sm">
+                        {% if request.state.site_ayarlar.iletisim_adres %}
+                        <div class="flex gap-3">
+                            <span class="material-symbols-outlined text-primary shrink-0 text-[20px]">location_on</span>
+                            <p class="leading-relaxed">{{ request.state.site_ayarlar.iletisim_adres }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if request.state.site_ayarlar.iletisim_telefon %}
+                        <div class="flex gap-3">
+                            <span class="material-symbols-outlined text-primary shrink-0 text-[20px]">call</span>
+                            <a href="tel:{{ request.state.site_ayarlar.iletisim_telefon }}" class="hover:text-primary transition-colors">{{ request.state.site_ayarlar.iletisim_telefon }}</a>
+                        </div>
+                        {% endif %}
+
+                        {% if request.state.site_ayarlar.iletisim_email %}
+                        <div class="flex gap-3">
+                            <span class="material-symbols-outlined text-primary shrink-0 text-[20px]">mail</span>
+                            <a href="mailto:{{ request.state.site_ayarlar.iletisim_email }}" class="hover:text-primary transition-colors">{{ request.state.site_ayarlar.iletisim_email }}</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-outline-variant/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-on-surface-variant">
+                <p>{{ request.state.site_ayarlar.footer_copyright if request.state.site_ayarlar else '&copy; 2025 BestWork. Tüm hakları saklıdır.' }}</p>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-primary">Kullanım Koşulları</a>
+                    <a href="#" class="hover:text-primary">Gizlilik</a>
+                    <a href="#" class="hover:text-primary">Çerezler</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

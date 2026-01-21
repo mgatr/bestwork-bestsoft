@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Komisyon Oranları - BestSoft</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ mobileMenuOpen: false }">
+    {% include "admin_navbar.html" %}
+
+    <main class="flex-1 flex flex-col w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <a href="/admin/ayarlar" class="text-blue-600 hover:underline mb-2 inline-block">← Ayarlara Dön</a>
+            <h1 class="text-4xl font-bold text-gray-900">Komisyon Oranları</h1>
+            <p class="text-gray-600 mt-2">Binary ağaç sistemi komisyon oranlarını ayarlayın</p>
+        </div>
+
+        <!-- Başarı Mesajı -->
+        {% if request.query_params.get('basari') %}
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+            ✓ Komisyon oranları başarıyla güncellendi!
+        </div>
+        {% endif %}
+
+        <!-- Form -->
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+            <form method="POST" action="/admin/mlm/komisyon/guncelle" class="space-y-6">
+
+                <!-- Kısa Kol Oranı -->
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="material-symbols-outlined text-green-600 inline align-middle">payments</span>
+                        Kısa Kol Komisyon Oranı (Matching Bonus)
+                    </label>
+                    <div class="flex items-center gap-4">
+                        <input type="number" step="0.01" min="0" max="1" name="kisa_kol_oran"
+                               value="{{ kisa_kol_oran.deger }}"
+                               class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <span class="text-2xl font-bold text-green-600">= %{{ (kisa_kol_oran.deger * 100)|int }}</span>
+                    </div>
+                    <div class="mt-4 bg-white p-4 rounded-lg">
+                        <p class="text-sm text-gray-700 font-medium mb-2">📊 Nasıl Çalışır?</p>
+                        <p class="text-sm text-gray-600">
+                            Kullanıcının sol ve sağ kolunda PV biriktiğinde, kısa koldaki (düşük olan) PV üzerinden
+                            <strong>%{{ (kisa_kol_oran.deger * 100)|int }}</strong> oranında CV kazancı ödenir.
+                        </p>
+                        <p class="text-sm text-gray-500 mt-2">
+                            Örnek: Sol: 1000 PV, Sağ: 800 PV → Kısa kol 800 PV → Kazanç: 800 × {{ kisa_kol_oran.deger }} = {{ 800 * kisa_kol_oran.deger }} CV
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Referans Oranı -->
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl border border-purple-200">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <span class="material-symbols-outlined text-purple-600 inline align-middle">share</span>
+                        Referans Komisyon Oranı
+                    </label>
+                    <div class="flex items-center gap-4">
+                        <input type="number" step="0.01" min="0" max="1" name="referans_orani"
+                               value="{{ referans_orani.deger }}"
+                               class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <span class="text-2xl font-bold text-purple-600">= %{{ (referans_orani.deger * 100)|int }}</span>
+                    </div>
+                    <div class="mt-4 bg-white p-4 rounded-lg">
+                        <p class="text-sm text-gray-700 font-medium mb-2">📊 Nasıl Çalışır?</p>
+                        <p class="text-sm text-gray-600">
+                            Yeni üye kaydında sponsor'a verilen referans bonusu hesaplanırken kullanılır.
+                        </p>
+                        <p class="text-sm text-gray-500 mt-2">
+                            Not: Şu anda sabit bonus sistemi kullanılıyor (MLM Ayarlar'dan düzenlenebilir)
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Kaydet Butonu -->
+                <div class="pt-4">
+                    <button type="submit"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">save</span>
+                        Komisyon Oranlarını Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Bilgilendirme -->
+        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-6">
+            <h3 class="font-semibold text-blue-900 mb-2">💡 Önemli Notlar</h3>
+            <ul class="text-sm text-blue-800 space-y-2">
+                <li>• Oranları 0-1 arası ondalık sayı olarak girin (örn: 0.13 = %13)</li>
+                <li>• Kısa kol oranı genellikle %10-15 arasında tutulur</li>
+                <li>• Değişiklikler anında devreye girer</li>
+            </ul>
+        </div>
+    </main>
+</body>
+</html>

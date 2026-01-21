@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slider Yönetimi - BestSoft</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        md: {
+                            primary: '#6750A4',
+                            onPrimary: '#FFFFFF',
+                            primaryContainer: '#EADDFF',
+                            onPrimaryContainer: '#21005D',
+                            secondary: '#625B71',
+                            secondaryContainer: '#E8DEF8',
+                            onSecondaryContainer: '#1D192B',
+                            tertiary: '#7D5260',
+                            tertiaryContainer: '#FFD8E4',
+                            onTertiaryContainer: '#31111D',
+                            surface: '#FEF7FF',
+                            surfaceDim: '#DED8E1',
+                            surfaceBright: '#FEF7FF',
+                            onSurface: '#1D1B20',
+                            onSurfaceVariant: '#49454F',
+                            outline: '#79747E',
+                            outlineVariant: '#CAC4D0',
+                            error: '#B3261E',
+                        }
+                    },
+                    boxShadow: {
+                        'elevation-1': '0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                        'elevation-2': '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#F3EDF7] min-h-screen flex flex-col m-0 text-md-onSurface" x-data="{ addModalOpen: false }">
+
+    {% include "admin_navbar.html" %}
+
+    <!-- Main Content Wrapper -->
+    <main class="flex-1 flex flex-col w-full max-w-[1200px] mx-auto p-4 md:p-6 lg:p-8">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center gap-4">
+                <a href="/bestsoft/dashboard" class="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-md-onSurfaceVariant">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <h1 class="text-[32px] font-normal text-md-onSurface">Slider Yönetimi</h1>
+            </div>
+            
+            <button @click="addModalOpen = true" class="h-10 px-6 rounded-full bg-md-primary text-md-onPrimary font-medium text-sm hover:shadow-md transition-shadow flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">add</span>
+                Yeni Ekle
+            </button>
+        </div>
+
+        <!-- Slider List Area -->
+        <div class="bg-md-surface rounded-[24px] p-8 border border-md-outlineVariant/20 shadow-sm">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for slide in sliders %}
+                <div class="bg-md-surfaceBright rounded-xl border border-md-outlineVariant/50 overflow-hidden shadow-elevation-1 group hover:shadow-elevation-2 transition-shadow">
+                    <!-- Image -->
+                    <div class="relative aspect-video bg-md-surfaceDim">
+                         <img src="{{ slide.resim_yolu }}" class="w-full h-full object-cover">
+                         
+                         <!-- Hover Actions -->
+                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <a href="{{ slide.resim_yolu }}" target="_blank" class="w-10 h-10 rounded-full bg-white/20 backdrop-blur text-white hover:bg-white/40 flex items-center justify-center">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </a>
+                            <a href="/admin/ayarlar/slider/sil/{{ slide.id }}" onclick="return confirm('Silmek istediğinize emin misiniz?')" class="w-10 h-10 rounded-full bg-md-error/80 backdrop-blur text-white hover:bg-md-error flex items-center justify-center">
+                                <span class="material-symbols-outlined">delete</span>
+                            </a>
+                         </div>
+                         
+                         <!-- Status Badge -->
+                         <div class="absolute top-2 right-2 flex items-center gap-1 bg-black/50 backdrop-blur px-2 py-1 rounded text-white text-[10px]">
+                            <span class="w-1.5 h-1.5 rounded-full {{ 'bg-green-400' if slide.aktif else 'bg-gray-400' }}"></span>
+                            Sıra: {{ slide.sira }}
+                         </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="p-4">
+                        <h3 class="font-medium text-md-onSurface truncate">{{ slide.baslik or 'Başlıksız' }}</h3>
+                        <p class="text-xs text-md-onSurfaceVariant truncate mt-1 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]">link</span>
+                            {{ slide.link or 'Yönlendirme yok' }}
+                        </p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-span-full py-16 flex flex-col items-center justify-center text-md-onSurfaceVariant/50 text-center">
+                    <span class="material-symbols-outlined text-[64px] mb-4 opacity-50">view_carousel</span>
+                    <p class="text-lg">Henüz hiç slider görseli eklenmemiş.</p>
+                    <p class="text-sm">"Yeni Ekle" butonunu kullanarak başlayın.</p>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Add Modal Dialogue -->
+    <div x-show="addModalOpen" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div @click.outside="addModalOpen = false" class="bg-md-surface rounded-[28px] w-full max-w-lg shadow-elevation-2 overflow-hidden" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 scale-90"
+             x-transition:enter-end="opacity-100 scale-100">
+            
+            <form action="/admin/ayarlar/slider/ekle" method="POST" enctype="multipart/form-data">
+                <div class="px-6 py-6 border-b border-md-outlineVariant/20 flex items-center justify-between">
+                    <h3 class="text-[24px] text-md-onSurface">Yeni Slide Ekle</h3>
+                    <button type="button" @click="addModalOpen = false" class="w-10 h-10 rounded-full hover:bg-black/5 flex items-center justify-center text-md-onSurfaceVariant">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+                
+                <div class="p-6 space-y-6">
+                    <!-- File Input -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-md-onSurfaceVariant">Görsel Yükle</label>
+                        <div class="relative">
+                            <input type="file" name="resim" accept="image/*" required 
+                                class="w-full text-sm text-md-onSurfaceVariant file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-md-primary/10 file:text-md-primary hover:file:bg-md-primary/20 cursor-pointer">
+                        </div>
+                        <p class="text-xs text-md-onSurfaceVariant/70 px-1">Otomatik WebP dönüşümü yapılır.</p>
+                    </div>
+
+                    <!-- Title Input -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-md-onSurfaceVariant">Başlık (Opsiyonel)</label>
+                        <div class="relative">
+                            <input type="text" name="baslik" 
+                                   class="w-full h-12 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors"
+                                   placeholder="Slider üzerinde görünecek başlık">
+                        </div>
+                    </div>
+
+                    <!-- Link Input -->
+                    <div class="flex flex-col gap-1">
+                        <label class="text-sm font-medium text-md-onSurfaceVariant">Yönlendirme Linki (Opsiyonel)</label>
+                        <div class="relative">
+                            <input type="text" name="link" 
+                                   class="w-full h-12 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors"
+                                   placeholder="https://...">
+                        </div>
+                    </div>
+                    
+                    <!-- Order Input -->
+                    <div class="flex flex-col gap-1">
+                         <label class="text-sm font-medium text-md-onSurfaceVariant">Sıra No</label>
+                         <input type="number" name="sira" value="0" 
+                                class="w-full h-12 bg-md-surfaceDim/50 border border-md-outlineVariant rounded-[4px] px-4 focus:border-md-primary focus:ring-1 focus:ring-md-primary outline-none text-md-onSurface transition-colors">
+                    </div>
+                </div>
+
+                <div class="px-6 py-4 bg-md-surfaceDim/30 flex justify-end gap-3">
+                    <button type="button" @click="addModalOpen = false" class="h-10 px-6 rounded-full text-md-primary font-medium text-sm hover:bg-md-primary/10 transition-colors">İptal</button>
+                    <button type="submit" class="h-10 px-6 rounded-full bg-md-primary text-md-onPrimary font-medium text-sm hover:shadow-md transition-shadow">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
